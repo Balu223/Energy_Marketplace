@@ -1,0 +1,16 @@
+<div style="text-align: center; padding: 20px;">
+  <h1>{{ message }}</h1>
+  
+  @if (weatherData$ | async; as data) {
+    <h2>Weather Forecast</h2>
+    <ul>
+      @for (item of data; track item.date) {
+        <li>
+          {{ item.date }} - {{ item.temperatureC }}°C
+        </li>
+      }
+    </ul>
+  } @else {
+    <p>Loading...</p>
+  }
+</div>
