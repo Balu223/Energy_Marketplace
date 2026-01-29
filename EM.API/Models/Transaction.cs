@@ -15,13 +15,14 @@ namespace EM.API.Models
 
         public Transaction()
         {
-            Transaction_Id = Guid.NewGuid();
-            Timestamp = DateTimeOffset.UtcNow;
             Products = new HashSet<Product>();
         }
 
-        public Guid Transaction_Id { get; set; }
-        public Guid User_Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Transaction_Id { get; set; }
+        public int User_Id { get; set; }
+        [ForeignKey(nameof(User_Id))]
         public User User { get; set; } = null!;
         public decimal Quantity { get; set; }       
         public decimal PricePerUnit { get; set; }

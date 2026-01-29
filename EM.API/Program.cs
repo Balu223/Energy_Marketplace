@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using EM.API.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -9,6 +12,11 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
+
+builder.Services.AddDbContext<MarketplaceDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 builder.Services.AddControllers();
 var app = builder.Build();
 
@@ -18,18 +26,28 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// app.UseHttpsRedirection();
-
-var summaries = new[]
+/* var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-
+}; */
 
 app.UseCors();
 app.MapControllers();
-app.MapGet("/weatherforecast", () =>
+
+app.MapGet("/api/marketplace/summary", async (MarketplaceDbContext db) =>
+{
+    var data = await db.MarketplaceItems
+        .Select(m => new
+        {
+            m.Product_Id,
+            m.Quantity
+        })
+        .ToListAsync();
+
+    return Results.Ok(data);
+});
+
+/* app.MapGet("/weatherforecast", () =>
 {
     var forecast =  Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
@@ -42,10 +60,10 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
-
+ */
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+/* record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+} */

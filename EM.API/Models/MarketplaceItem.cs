@@ -8,9 +8,7 @@ namespace EM.API.Models
     {
 
         public MarketplaceItem()
-        {
-            UpdatedAt = DateTime.UtcNow;
-        }
+        {        }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MarketplaceItem_Id { get; set; }

@@ -1,0 +1,14 @@
+
+
+@if (data$ | async; as data) {
+  <canvas baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          chartType="bar">
+  </canvas>
+} 
+   @else {
+      <div>Loading...</div>
+
+  }
+

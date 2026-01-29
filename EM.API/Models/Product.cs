@@ -11,7 +11,6 @@ namespace EM.API.Models
     {
         public Product()
         {
-            CreatedDate = DateTime.UtcNow;
         }
         
         [Key]
@@ -25,6 +24,7 @@ namespace EM.API.Models
         public int Current_Quantity { get; set; }
         [Required]
         public Units Unit { get; set; }
+        public decimal Price_Per_Unit { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
      
