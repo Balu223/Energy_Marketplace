@@ -1,16 +1,14 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { MarketplaceChartComponent } from './app/marketplace-chart.component';
-import { provideHttpClient } from '@angular/common/http';
-import { JsonPipe } from '@angular/common';
-import { AsyncPipe } from '@angular/common';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { AppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
+import { provideHttpClient } from '@angular/common/http';
 
-providers: [
-  provideCharts(withDefaultRegisterables())
-]
-
-
-bootstrapApplication(MarketplaceChartComponent, {
-  providers: [provideHttpClient(), JsonPipe, AsyncPipe, provideCharts(withDefaultRegisterables())]
-})
-  .catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(),
+    provideCharts(withDefaultRegisterables()),
+  ]
+}).catch(err => console.error(err));
