@@ -54,6 +54,12 @@ namespace EM.API.Repositories
                      .WithMany(u => u.Stripe_payments)
                      .HasForeignKey(sp => sp.User_Id);
             });
+            modelBuilder.Entity<Product>()
+            .Property(p => p.Unit)
+            .HasConversion(
+                v => v.ToString(),
+                v => (Models.Enums.Units)Enum.Parse(typeof(Models.Enums.Units), v));
+            
 
         modelBuilder.Entity<Product>().HasData(
         new Product { 
