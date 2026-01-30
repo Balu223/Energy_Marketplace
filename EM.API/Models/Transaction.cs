@@ -15,7 +15,7 @@ namespace EM.API.Models
 
         public Transaction()
         {
-            Products = new HashSet<Product>();
+           // Products = new HashSet<Product>();
         }
 
         [Key]
@@ -29,8 +29,10 @@ namespace EM.API.Models
         public decimal TotalPrice => Math.Round(Quantity * PricePerUnit, 2);
         public Transaction_Type TransactionType { get; set; }
         public DateTimeOffset Timestamp { get; set; }
+        public int Product_Id { get; set; }
+        [ForeignKey(nameof(Product_Id))]
+        public Product Product { get; set; } = null!;
 
-
-        public virtual ICollection<Product> Products { get; set;  }
+        // public virtual ICollection<Product> Products { get; set;  }
     }
 }

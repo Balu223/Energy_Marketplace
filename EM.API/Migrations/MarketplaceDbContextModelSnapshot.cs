@@ -125,18 +125,14 @@ namespace EM.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("Transaction_Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Unit")
-                        .HasColumnType("integer");
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Product_Id");
-
-                    b.HasIndex("Transaction_Id");
 
                     b.ToTable("Products");
 
@@ -149,7 +145,7 @@ namespace EM.API.Migrations
                             Initial_Quantity = 1000,
                             Price_Per_Unit = 150.00m,
                             Product_Name = "Electricity",
-                            Unit = 0
+                            Unit = "kWh"
                         },
                         new
                         {
@@ -159,7 +155,7 @@ namespace EM.API.Migrations
                             Initial_Quantity = 500,
                             Price_Per_Unit = 45.00m,
                             Product_Name = "Natural Gas",
-                            Unit = 1
+                            Unit = "m3"
                         },
                         new
                         {
@@ -169,7 +165,7 @@ namespace EM.API.Migrations
                             Initial_Quantity = 200,
                             Price_Per_Unit = 280.00m,
                             Product_Name = "Crude Oil",
-                            Unit = 2
+                            Unit = "liters"
                         });
                 });
 
@@ -221,6 +217,9 @@ namespace EM.API.Migrations
                     b.Property<decimal>("PricePerUnit")
                         .HasColumnType("numeric");
 
+                    b.Property<int>("Product_Id")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("Quantity")
                         .HasColumnType("numeric");
 
@@ -234,6 +233,8 @@ namespace EM.API.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Transaction_Id");
+
+                    b.HasIndex("Product_Id");
 
                     b.HasIndex("User_Id");
 
@@ -314,13 +315,6 @@ namespace EM.API.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("EM.API.Models.Product", b =>
-                {
-                    b.HasOne("EM.API.Models.Transaction", null)
-                        .WithMany("Products")
-                        .HasForeignKey("Transaction_Id");
-                });
-
             modelBuilder.Entity("EM.API.Models.StripePayment", b =>
                 {
                     b.HasOne("EM.API.Models.User", "User")
@@ -334,18 +328,21 @@ namespace EM.API.Migrations
 
             modelBuilder.Entity("EM.API.Models.Transaction", b =>
                 {
+                    b.HasOne("EM.API.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("Product_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("EM.API.Models.User", "User")
                         .WithMany("Transactions")
                         .HasForeignKey("User_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
-                });
+                    b.Navigation("Product");
 
-            modelBuilder.Entity("EM.API.Models.Transaction", b =>
-                {
-                    b.Navigation("Products");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EM.API.Models.User", b =>
