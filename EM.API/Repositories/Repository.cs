@@ -2,6 +2,8 @@ using EM.API.Repositories;
 using EM.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
+namespace EM.API.Repositories
+{   
 public class Repository<T> : IRepository<T> where T : class
 {
     protected readonly MarketplaceDbContext _context;
@@ -30,4 +32,5 @@ public class Repository<T> : IRepository<T> where T : class
 
     public Task<int> SaveChangesAsync()
         => _context.SaveChangesAsync();
+}
 }

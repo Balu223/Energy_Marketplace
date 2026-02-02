@@ -22,7 +22,7 @@ namespace EM.API.Controllers
             return Ok(result);
         }
         [HttpGet("{userId}")]
-        public async Task<ActionResult<UserResponseDto>> GetUserById(string userId)
+        public async Task<ActionResult<UserResponseDto>> GetUserById(int userId)
         {
             var result = await _userService.GetUserByIdAsync(userId);
             if (result == null)
@@ -43,7 +43,7 @@ namespace EM.API.Controllers
         }
 
         [HttpPut("{userId}")]
-        public async Task<ActionResult<UserResponseDto>> UpdateUser(string userId, [FromBody] UpdateUserDto userDto)
+        public async Task<ActionResult<UserResponseDto>> UpdateUser(int userId, [FromBody] UpdateUserDto userDto)
         {
             var result = await _userService.UpdateUserAsync(userId, userDto);
             if (result == null)
@@ -53,7 +53,7 @@ namespace EM.API.Controllers
             return Ok(result);
         }
         [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUser(string userId)
+        public async Task<IActionResult> DeleteUser(int userId)
         {
             var success = await _userService.DeleteUserAsync(userId);
             if (!success)
@@ -73,7 +73,7 @@ namespace EM.API.Controllers
             return Ok(result);
         }
         [HttpPost("deactivate/{userId}")]
-        public async Task<IActionResult> DeactivateUser(string userId)
+        public async Task<IActionResult> DeactivateUser(int userId)
         {
             var success = await _userService.DeactivateAsync(userId);
             if (!success)
