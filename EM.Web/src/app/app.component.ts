@@ -7,11 +7,12 @@ import { LogoutButtonComponent } from './Features/Auth/Login/auth-logout.compone
 import { MarketplaceChartComponent } from './Features/Dashboard/Components/Marketplace-chart/marketplace-chart.component';
 import { MarketplaceChartButtonComponent } from "./Features/Dashboard/Components/Marketplace-chart/marketplace-chart-button.component";
 import { filter } from 'rxjs/internal/operators/filter';
+import { UserProfileButtonComponent } from "./Features/Dashboard/Components/userprofile-button.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, LoginButtonComponent, LogoutButtonComponent, MarketplaceChartButtonComponent, RouterOutlet],
+  imports: [CommonModule, AsyncPipe, LoginButtonComponent, LogoutButtonComponent, MarketplaceChartButtonComponent, RouterOutlet, UserProfileButtonComponent],
   template: `
     <div class="app-container">
       <!-- Loading / error maradhat ugyanígy -->
@@ -37,6 +38,7 @@ import { filter } from 'rxjs/internal/operators/filter';
         <div class="header-actions">
           @if (auth.isAuthenticated$ | async) {
             <marketplace-chart-button></marketplace-chart-button>
+            <user-profile-button></user-profile-button>
             <app-logout-button />
           } @else {
             <app-login-button />
@@ -51,7 +53,13 @@ import { filter } from 'rxjs/internal/operators/filter';
           <main class="page-content">
             <router-outlet></router-outlet>
           </main>
-        } @else {
+        } @else if (isProfilePage()) {
+          <main class="page-content">
+            <router-outlet></router-outlet>
+          </main>
+        }
+        
+        @else {
           <!-- NEM SUMMARY: welcome / profil oldal -->
           <main class="page-content">
             @if (auth.isAuthenticated$ | async) {
@@ -61,8 +69,8 @@ import { filter } from 'rxjs/internal/operators/filter';
               </div>
             } @else {
               <div class="main-card-wrapper">
-                <h1>Welcome to Energy Marketplace</h1>
-                <p>Sign in to start trading.</p>
+                <h1>Welcome to Energy Marketplace!</h1>
+                <p>Create an account or log in to start trading.</p>
               </div>
             }
           </main>
@@ -77,6 +85,7 @@ export class AppComponent {
   private router = inject(Router);
 
   protected readonly isSummaryPage = signal(false);
+  protected readonly isProfilePage = signal(false);
 
   constructor() {
     // figyeljük a navigationt, hogy /summary-e az aktuális url
@@ -84,6 +93,7 @@ export class AppComponent {
       .pipe(filter((e: any) => e?.routerEvent?.url || e.url))
       .subscribe(() => {
         this.isSummaryPage.set(this.router.url.startsWith('/summary'));
+        this.isProfilePage.set(this.router.url.startsWith('/profile'));
       });
   }
 }

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { MarketplaceChartComponent } from './Features/Dashboard/Components/Marketplace-chart/marketplace-chart.component';
 import { AppComponent } from './app.component';
 import { authGuard } from './Core/Guards/auth.guard';
+import { UserProfileComponent } from './Features/Dashboard/Components/userprofile.component';
 
 export const routes: Routes = [
   {
@@ -18,7 +19,9 @@ export const routes: Routes = [
     component: MarketplaceChartComponent,
     canActivate: [authGuard]
   },
-  // később:
-  // { path: 'login', component: AuthLoginComponent },
-  // { path: 'callback', component: AuthCallbackComponent },
+    {
+    path: 'profile',
+    component: UserProfileComponent,
+    canActivate: [authGuard]
+  },
 ];
