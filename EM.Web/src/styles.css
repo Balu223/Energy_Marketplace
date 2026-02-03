@@ -1,1 +1,230 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0e1117;
+  color: #e5e5e5;
+}
+
+/* APP WRAPPER */
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* HEADER */
+
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  margin-bottom: 24px;
+}
+
+.auth0-logo {
+  height: 28px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* GOMBOK */
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #f15a29;
+  color: #fff;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+  background: #ff7a3c;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* KÁRTYÁK, ÁLLAPOTOK */
+
+.page-content {
+  margin-top: 16px;
+}
+
+.main-card-wrapper {
+  margin: 0 auto;
+  max-width: 560px;
+  padding: 32px 24px 28px;
+  border-radius: 16px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  text-align: center;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.main-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-bottom: 24px;
+}
+
+.loading-state,
+.error-state {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+.error-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #f97373;
+}
+
+.error-message,
+.error-sub-message {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* SUMMARY / CHART OLDAL */
+
+.summary-container {
+  margin-top: 16px;
+  padding: 20px 20px 24px;
+  border-radius: 16px;
+  background: #161b22;
+  border: 1px solid #30363d;
+}
+
+.summary-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.summary-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.summary-subtitle {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+canvas {
+  max-width: 100%;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .main-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .main-card-wrapper {
+    padding: 24px 16px 20px;
+  }
+
+  .summary-container {
+    padding: 16px 12px 20px;
+  }
+}
+.user-profile {
+  margin-top: 16px;
+  padding: 24px 20px 28px;
+  border-radius: 16px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Form layout */
+
+.user-profile form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-fields-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-fields-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+
+/* Material field szélesség */
+
+.user-profile mat-form-field {
+  width: 100%;
+}
+
+/* Gombok */
+
+.buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.buttons-container button[mat-raised-button] {
+  min-width: 120px;
+}
+
+
+@media (max-width: 768px) {
+  .user-profile {
+    padding: 20px 16px 24px;
+  }
+
+  .input-fields-container {
+    grid-template-columns: 1fr;
+  }
+}
+.user-profile h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
