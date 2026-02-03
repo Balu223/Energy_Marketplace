@@ -164,3 +164,67 @@ canvas {
     padding: 16px 12px 20px;
   }
 }
+.user-profile {
+  margin-top: 16px;
+  padding: 24px 20px 28px;
+  border-radius: 16px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Form layout */
+
+.user-profile form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-fields-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-fields-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+
+/* Material field szélesség */
+
+.user-profile mat-form-field {
+  width: 100%;
+}
+
+/* Gombok */
+
+.buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.buttons-container button[mat-raised-button] {
+  min-width: 120px;
+}
+
+
+@media (max-width: 768px) {
+  .user-profile {
+    padding: 20px 16px 24px;
+  }
+
+  .input-fields-container {
+    grid-template-columns: 1fr;
+  }
+}
+.user-profile h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
