@@ -7,12 +7,15 @@ namespace EM.API.Services.Interfaces
     public interface IUserService
     {
         Task<UserResponseDto?> GetUserByIdAsync(int userId);
+        Task<UserResponseDto?> GetUserByAuth0IdAsync(string auth0Id);
         Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
         Task<UserResponseDto?> CreateUserAsync(CreateUserDto userDto);
-        Task<UserResponseDto?> UpdateUserAsync(int userId, UpdateUserDto userDto);
+        Task<UserResponseDto?> UpdateUserAsync(int userId, UpdateProfileDto userDto);
         Task<bool> DeleteUserAsync(int userId);
         Task<bool> DeactivateAsync(int userId);
         Task<UserResponseDto?> LoginUserAsync(LoginRequestDto loginRequest);
+        Task<UserProfileDto> GetCurrentProfileAsync();
+        Task<UserProfileDto> UpdateCurrentProfileAsync(UpdateProfileDto dto);
 
     }
 }

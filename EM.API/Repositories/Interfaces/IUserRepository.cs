@@ -5,6 +5,7 @@ namespace EM.API.Repositories.Interfaces
     public interface IUserRepository: IRepository<User>
     {
         Task<User?> GetUserById(int userId);
+        Task<User?> GetUserByAuth0IdAsync(string auth0Id);
         Task<IReadOnlyList<User>> GetAllUsersAsync();
         Task<User?> CreateUserAsync(User user);
         Task<User?> UpdateUserAsync(int userId, User user);
