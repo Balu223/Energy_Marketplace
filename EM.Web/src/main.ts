@@ -25,7 +25,19 @@ const auth0Config = mergeApplicationConfig(appConfig, {
       clientId: environment.auth0.clientId,
       authorizationParams: {
         redirect_uri: window.location.origin,
+        audience: 'https://dev-6lmzih7t2mbvxjwp.us.auth0.com/api/v2/'
       },
+      httpInterceptor: {
+        allowedList: [
+          {
+          uri: 'http://localhost:5159/api/*',
+          tokenOptions: {
+            authorizationParams: {
+              audience: 'https://dev-6lmzih7t2mbvxjwp.us.auth0.com/api/v2/'
+            }
+          }
+      }]
+      }
     }),
   ],
 });

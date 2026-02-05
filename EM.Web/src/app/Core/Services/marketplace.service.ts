@@ -17,6 +17,6 @@ export class MarketplaceService {
   constructor(private http: HttpClient) {}
 
   getSummary(): Observable<MarketplaceSummaryItem[]> {
-    return this.http.get<MarketplaceSummaryItem[]>(`${this.baseUrl}/summary`);
+    return this.http.get<MarketplaceSummaryItem[]>(`${this.baseUrl}/summary`, { withCredentials: true});
   }
 }

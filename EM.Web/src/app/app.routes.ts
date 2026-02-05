@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { MarketplaceChartComponent } from './Features/Dashboard/Components/Marketplace-chart/marketplace-chart.component';
 import { AppComponent } from './app.component';
 import { authGuard } from './Core/Guards/auth.guard';
-import { UserProfileComponent } from './Features/Dashboard/Components/userprofile.component';
+import { UserProfileComponent } from './Features/Dashboard/Components/Userprofile/userprofile.component';
 
 export const routes: Routes = [
   {

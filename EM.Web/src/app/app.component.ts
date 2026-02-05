@@ -1,21 +1,20 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
+import { AuthModule, AuthService } from '@auth0/auth0-angular';
 import { LoginButtonComponent } from './Features/Auth/Login/auth-login.component';
 import { LogoutButtonComponent } from './Features/Auth/Login/auth-logout.component';
 import { MarketplaceChartComponent } from './Features/Dashboard/Components/Marketplace-chart/marketplace-chart.component';
 import { MarketplaceChartButtonComponent } from "./Features/Dashboard/Components/Marketplace-chart/marketplace-chart-button.component";
 import { filter } from 'rxjs/internal/operators/filter';
-import { UserProfileButtonComponent } from "./Features/Dashboard/Components/userprofile-button.component";
+import { UserProfileButtonComponent } from "./Features/Dashboard/Components/Userprofile/userprofile-button.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, LoginButtonComponent, LogoutButtonComponent, MarketplaceChartButtonComponent, RouterOutlet, UserProfileButtonComponent],
+  imports: [CommonModule, AsyncPipe, LoginButtonComponent, LogoutButtonComponent, MarketplaceChartButtonComponent, RouterOutlet, UserProfileButtonComponent, AuthModule],
   template: `
     <div class="app-container">
-      <!-- Loading / error maradhat ugyanígy -->
       @if (auth.isLoading$ | async) {
         <div class="loading-state">Loading...</div>
       }
@@ -27,7 +26,6 @@ import { UserProfileButtonComponent } from "./Features/Dashboard/Components/user
         </div>
       }
 
-      <!-- HEADER: Auth0 login/logout + chart gomb -->
       <header class="main-header">
         <img
           src="https://cdn.auth0.com/quantum-assets/dist/latest/logos/auth0/auth0-lockup-en-ondark.png"
@@ -46,10 +44,8 @@ import { UserProfileButtonComponent } from "./Features/Dashboard/Components/user
         </div>
       </header>
 
-      <!-- TÖRZS: kétféle viselkedés -->
       @if (!(auth.isLoading$ | async) && !(auth.error$ | async)) {
         @if (isSummaryPage()) {
-          <!-- SUMMARY OLDAL: csak a route tartalma (chart) -->
           <main class="page-content">
             <router-outlet></router-outlet>
           </main>
@@ -60,7 +56,6 @@ import { UserProfileButtonComponent } from "./Features/Dashboard/Components/user
         }
         
         @else {
-          <!-- NEM SUMMARY: welcome / profil oldal -->
           <main class="page-content">
             @if (auth.isAuthenticated$ | async) {
               <div class="main-card-wrapper">
@@ -88,7 +83,6 @@ export class AppComponent {
   protected readonly isProfilePage = signal(false);
 
   constructor() {
-    // figyeljük a navigationt, hogy /summary-e az aktuális url
     this.router.events
       .pipe(filter((e: any) => e?.routerEvent?.url || e.url))
       .subscribe(() => {
