@@ -21,17 +21,15 @@ namespace EM.API.Models
         [Key]                       
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int User_Id { get; set; }
+        [Required]
+        public string Auth0_Id { get; set; } = null!;
 
         [Required]
         public string Username { get; set; } = null!;
 
         [Required]
         public string Email { get; set; } = null!;
-
-        [Required]
-        public string PasswordHash { get; set; } = null!;
-
-        public Roles Role { get; set; }
+        public string Role { get; set; } = "User";
 
         public string Address { get; set; } = string.Empty;
 
@@ -41,7 +39,7 @@ namespace EM.API.Models
 
         public DateTime? UpdatedAt { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public virtual ICollection<StripePayment> Stripe_payments { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
