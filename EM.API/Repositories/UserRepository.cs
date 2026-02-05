@@ -12,6 +12,11 @@ namespace EM.API.Repositories
      {
          return await _context.Set<User>().FirstOrDefaultAsync(x => x.User_Id == userId);
      }
+
+     public async Task<User?> GetUserByAuth0IdAsync(string auth0Id)
+     {
+         return await _context.Set<User>().FirstOrDefaultAsync(x => x.Auth0_Id == auth0Id);
+     }
  
      public async Task<IReadOnlyList<User>> GetAllUsersAsync()
      {
@@ -71,7 +76,7 @@ namespace EM.API.Repositories
      }
           public async Task<User?> LoginUserAsync(string username, string password)
      {
-         var user = _context.Set<User>().FirstOrDefault(x => x.Username == username && x.PasswordHash == password);
+         var user = _context.Set<User>().FirstOrDefault(x => x.Username == username);
          if (user != null)
          {
              _context.Set<User>().Update(user);

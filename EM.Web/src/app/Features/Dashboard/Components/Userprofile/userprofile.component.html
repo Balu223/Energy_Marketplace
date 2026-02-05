@@ -1,0 +1,42 @@
+<div class="user-profile">
+  <h2> {{ user?.username }}'s Profile</h2>
+  <form [formGroup]="form" (ngSubmit)="onSave()" ng-model="true">
+
+    <div class="form-fields-wrapper">
+
+      <div class="input-fields-container">
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" type="text" />
+        </mat-form-field>
+
+          <mat-form-field>
+    <mat-label>E-mail</mat-label>
+    <input matInput formControlName="email" type="email" />
+  </mat-form-field>
+
+          <mat-form-field>
+    <mat-label>Address</mat-label>
+    <input matInput formControlName="address" type="text" />
+  </mat-form-field>
+
+        <mat-form-field>
+    <mat-label>Role</mat-label>
+    <mat-select formControlName="role", type ="role">
+      <mat-option value="Admin">Admin</mat-option>
+      <mat-option value="Broker">Broker</mat-option>
+      <mat-option value="User">User</mat-option>
+    </mat-select>
+  </mat-form-field>
+      </div>
+    </div>
+
+    <div class="buttons-container">
+      <update-profile-button (save)="onSave()" mat-raised-button
+              type="submit"
+              color="primary"
+      >Save</update-profile-button>
+
+    </div>
+  </form>
+</div>

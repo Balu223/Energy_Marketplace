@@ -8,6 +8,6 @@ namespace EM.API.Services.DTOs
         public string PasswordHash { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string address { get; set; } = string.Empty;
-        public Roles Role { get; set; }
+        public string? Role { get; set; }
     }
 }

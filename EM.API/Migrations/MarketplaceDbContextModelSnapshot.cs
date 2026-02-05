@@ -253,6 +253,10 @@ namespace EM.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Auth0_Id")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -266,12 +270,9 @@ namespace EM.API.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -281,6 +282,9 @@ namespace EM.API.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("User_Id");
+
+                    b.HasIndex("Auth0_Id")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

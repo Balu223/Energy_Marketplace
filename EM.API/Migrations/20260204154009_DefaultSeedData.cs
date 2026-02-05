@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EM.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCucc : Migration
+    public partial class DefaultSeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,10 +39,10 @@ namespace EM.API.Migrations
                 {
                     User_Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Auth0_Id = table.Column<string>(type: "text", nullable: false),
                     Username = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: false),
                     Address = table.Column<string>(type: "text", nullable: false),
                     Credits = table.Column<decimal>(type: "numeric", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -207,6 +207,12 @@ namespace EM.API.Migrations
                 name: "IX_Transactions_User_Id",
                 table: "Transactions",
                 column: "User_Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Auth0_Id",
+                table: "Users",
+                column: "Auth0_Id",
+                unique: true);
         }
 
         /// <inheritdoc />

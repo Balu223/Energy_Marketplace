@@ -1,18 +1,22 @@
 using EM.API.Services.DTOs;
 using EM.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EM.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ICurrentUserService currentUserService)
         {
             _userService = userService;
+            _currentUserService = currentUserService;
         }
 
         [HttpGet]
@@ -42,8 +46,8 @@ namespace EM.API.Controllers
             return CreatedAtAction(nameof(GetUserById), new { userId = result.User_Id }, result);
         }
 
-        [HttpPut("{userId}")]
-        public async Task<ActionResult<UserResponseDto>> UpdateUser(int userId, [FromBody] UpdateUserDto userDto)
+        [HttpPut("{userId:int}")]
+        public async Task<ActionResult<UserResponseDto>> UpdateUser(int userId, [FromBody] UpdateProfileDto userDto)
         {
             var result = await _userService.UpdateUserAsync(userId, userDto);
             if (result == null)
@@ -81,6 +85,34 @@ namespace EM.API.Controllers
                 return NotFound();
             }
             return NoContent();
+        }
+        [HttpGet("me")]
+        public async Task<IActionResult> Me()
+        {
+            var user = await _currentUserService.GetCurrentUserAsync();
+            var dto = new UserResponseDto{
+                User_Id = user.User_Id,
+                Username = user.Username,
+                Email = user.Email,
+                Address = user.Address,
+                Role = user.Role
+                
+            };
+            return Ok(dto);
+        }
+        [HttpPut("me")]
+        public async Task<ActionResult<UserResponseDto>> UpdateMe(
+            [FromBody] UpdateProfileDto userDto,
+            [FromServices] ICurrentUserService currentUserService,
+            [FromServices] IUserService userService)
+        {
+            var user = await currentUserService.GetCurrentUserAsync();
+            var result = await userService.UpdateUserAsync(user.User_Id, userDto);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
     }
 }

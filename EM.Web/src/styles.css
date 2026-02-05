@@ -173,6 +173,17 @@ canvas {
   max-width: 640px;
   margin-left: auto;
   margin-right: auto;
+  box-sizing: border-box;
+  color: #c9d1d9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Cím */
+
+.user-profile h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 /* Form layout */
@@ -194,10 +205,45 @@ canvas {
   gap: 16px 24px;
 }
 
-/* Material field szélesség */
+/* Angular Material mezők szélessége */
 
 .user-profile mat-form-field {
   width: 100%;
+}
+
+/* Sima label + input (email, address) igazítása a mat-form-field-hez */
+
+.user-profile mat-label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+  color: #8b949e;
+  font-weight: 500;
+}
+
+.user-profile input[type="email"],
+.user-profile input[type="address"],
+.user-profile input[type="text"],
+.user-profile input[type="role"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  font-size: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.user-profile input[type="email"]:focus,
+.user-profile input[type="address"]:focus,
+.user-profile input[type="text"]:focus
+.user-profile input[type="role"]:focus  {
+  outline: none;
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.3);
+  background-color: #0b1016;
 }
 
 /* Gombok */
@@ -212,6 +258,7 @@ canvas {
   min-width: 120px;
 }
 
+/* Reszponzív */
 
 @media (max-width: 768px) {
   .user-profile {
@@ -222,9 +269,23 @@ canvas {
     grid-template-columns: 1fr;
   }
 }
-.user-profile h2 {
-  margin: 0 0 16px;
-  font-size: 20px;
-  font-weight: 600;
+.user-profile mat-form-field.mat-form-field-disabled .mat-mdc-text-field-wrapper {
+  background-color: #11151b;
+  border-radius: 6px;
+  opacity: 0.8;
 }
 
+.user-profile mat-form-field.mat-form-field-disabled .mat-mdc-input-element {
+  color: #6e7681;
+  cursor: not-allowed;
+}
+.user-profile input[disabled] {
+  background-color: #11151b;
+  border-color: #30363d;
+  color: #6e7681;
+  cursor: not-allowed;
+}
+
+.user-profile input[disabled]::placeholder {
+  color: #484f58;
+}
