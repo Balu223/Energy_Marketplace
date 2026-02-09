@@ -226,6 +226,9 @@ namespace EM.API.Migrations
                     b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("numeric");
+
                     b.Property<int>("TransactionType")
                         .HasColumnType("integer");
 

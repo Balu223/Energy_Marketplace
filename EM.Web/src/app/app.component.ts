@@ -8,6 +8,8 @@ import { MarketplaceChartComponent } from './Features/Dashboard/Components/Marke
 import { MarketplaceChartButtonComponent } from "./Features/Dashboard/Components/Marketplace-chart/marketplace-chart-button.component";
 import { filter } from 'rxjs/internal/operators/filter';
 import { UserProfileButtonComponent } from "./Features/Dashboard/Components/Userprofile/userprofile-button.component";
+import { UserResponseDto, UserService } from './Core/Services/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -28,20 +30,29 @@ import { UserProfileButtonComponent } from "./Features/Dashboard/Components/User
 
       <header class="main-header">
         <img
-          src="https://cdn.auth0.com/quantum-assets/dist/latest/logos/auth0/auth0-lockup-en-ondark.png"
-          alt="Auth0 Logo"
-          class="auth0-logo"
+          src="/logo.png"
+          alt="Energy Marketplace Logo"
+          class="em-logo"
         />
+        <h1 class="app-title">Main Marketplace</h1>
+<div style="position: relative">
+  <div class="header-actions">
+    @if (auth.isAuthenticated$ | async) {
+      <marketplace-chart-button></marketplace-chart-button>
+      <user-profile-button></user-profile-button>
+      <app-logout-button />
+    } @else {
+      <app-login-button />
+    }
+  </div>
+  @if (auth.isAuthenticated$ | async) {
+  <div class="credits-card">
+  <span class="credits-label">Credits</span>
+  <span class="credits-value">{{ (userdata$ | async)?.credits }} HUF</span>
+</div>}
+</div>
 
-        <div class="header-actions">
-          @if (auth.isAuthenticated$ | async) {
-            <marketplace-chart-button></marketplace-chart-button>
-            <user-profile-button></user-profile-button>
-            <app-logout-button />
-          } @else {
-            <app-login-button />
-          }
-        </div>
+
       </header>
 
       @if (!(auth.isLoading$ | async) && !(auth.error$ | async)) {
@@ -59,7 +70,7 @@ import { UserProfileButtonComponent } from "./Features/Dashboard/Components/User
           <main class="page-content">
             @if (auth.isAuthenticated$ | async) {
               <div class="main-card-wrapper">
-                <h1>Welcome to Energy Marketplace</h1>
+                <h1>Welcome, {{ (userdata$ | async)?.username }}!</h1>
                 <p>Successfully logged in.</p>
               </div>
             } @else {
@@ -78,16 +89,19 @@ import { UserProfileButtonComponent } from "./Features/Dashboard/Components/User
 export class AppComponent {
   protected auth = inject(AuthService);
   private router = inject(Router);
-
+  userdata$!: Observable<UserResponseDto | null>;
   protected readonly isSummaryPage = signal(false);
   protected readonly isProfilePage = signal(false);
-
-  constructor() {
+  
+  constructor(private userService: UserService) {
     this.router.events
       .pipe(filter((e: any) => e?.routerEvent?.url || e.url))
       .subscribe(() => {
         this.isSummaryPage.set(this.router.url.startsWith('/summary'));
         this.isProfilePage.set(this.router.url.startsWith('/profile'));
       });
+        this.userdata$ = this.userService.user$;
+        this.userService.getMe().subscribe();
+
   }
 }

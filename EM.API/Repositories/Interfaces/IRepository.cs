@@ -10,8 +10,8 @@ namespace EM.API.Repositories.Interfaces
         Task<T?> GetByIdAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T entity);
-        void Update(T entity);
-        void Remove(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
         Task<int> SaveChangesAsync();
     }
 }

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using EM.API.Repositories;
 using EM.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,11 @@ public class Repository<T> : IRepository<T> where T : class
     public virtual async Task AddAsync(T entity)
         => await _dbSet.AddAsync(entity);
 
-    public virtual void Update(T entity)
+    public virtual async Task UpdateAsync(T entity)
         => _dbSet.Update(entity);
+        
 
-    public virtual void Remove(T entity)
+    public virtual async Task DeleteAsync(T entity)
         => _dbSet.Remove(entity);
 
     public Task<int> SaveChangesAsync()

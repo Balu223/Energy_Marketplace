@@ -5,4 +5,5 @@ public class UserProfileDto
     public string Email { get; set; } = string.Empty;
     public string? Address {get; set;}
     public string Role { get; set; } = string.Empty;
+    public decimal Credits { get; set; }
 }

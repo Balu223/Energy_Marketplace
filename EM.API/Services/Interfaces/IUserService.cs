@@ -6,7 +6,6 @@ namespace EM.API.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<UserResponseDto?> GetUserByIdAsync(int userId);
         Task<UserResponseDto?> GetUserByAuth0IdAsync(string auth0Id);
         Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
         Task<UserResponseDto?> CreateUserAsync(CreateUserDto userDto);

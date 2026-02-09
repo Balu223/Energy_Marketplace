@@ -50,10 +50,12 @@ export class UserProfileComponent implements OnInit {
     if (this.form.invalid) return;
 
     const updatedProfile: UserResponseDto = {
+      userId: this.user?.userId ?? 0,
       username: this.form.value.username ?? '',
       email: this.form.value.email ?? '',
       address: this.form.value.address ?? '',
-      role: this.form.value.role ?? ''
+      role: this.form.value.role ?? '',
+      credits: this.user?.credits ?? 0
     };
     this.userService.updateMyProfile(updatedProfile).subscribe(() => {
       console.log('Profile updated successfully');
