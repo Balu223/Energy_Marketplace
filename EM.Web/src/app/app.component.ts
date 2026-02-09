@@ -30,11 +30,11 @@ import { Observable } from 'rxjs';
 
       <header class="main-header">
         <img
-          src="https://cdn.auth0.com/quantum-assets/dist/latest/logos/auth0/auth0-lockup-en-ondark.png"
-          alt="Auth0 Logo"
-          class="auth0-logo"
+          src="/logo.png"
+          alt="Energy Marketplace Logo"
+          class="em-logo"
         />
-        <h1 class="app-title">Energy Marketplace Dashboard</h1>
+        <h1 class="app-title">Main Marketplace</h1>
 <div style="position: relative">
   <div class="header-actions">
     @if (auth.isAuthenticated$ | async) {
@@ -89,9 +89,10 @@ import { Observable } from 'rxjs';
 export class AppComponent {
   protected auth = inject(AuthService);
   private router = inject(Router);
-  userdata$!: Observable<UserResponseDto>;
+  userdata$!: Observable<UserResponseDto | null>;
   protected readonly isSummaryPage = signal(false);
   protected readonly isProfilePage = signal(false);
+  
   constructor(private userService: UserService) {
     this.router.events
       .pipe(filter((e: any) => e?.routerEvent?.url || e.url))
@@ -99,7 +100,8 @@ export class AppComponent {
         this.isSummaryPage.set(this.router.url.startsWith('/summary'));
         this.isProfilePage.set(this.router.url.startsWith('/profile'));
       });
-        this.userdata$ = this.userService.getMe();
+        this.userdata$ = this.userService.user$;
+        this.userService.getMe().subscribe();
 
   }
 }

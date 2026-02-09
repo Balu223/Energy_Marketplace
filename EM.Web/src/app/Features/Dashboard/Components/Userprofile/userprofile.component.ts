@@ -50,6 +50,7 @@ export class UserProfileComponent implements OnInit {
     if (this.form.invalid) return;
 
     const updatedProfile: UserResponseDto = {
+      userId: this.user?.userId ?? 0,
       username: this.form.value.username ?? '',
       email: this.form.value.email ?? '',
       address: this.form.value.address ?? '',

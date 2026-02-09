@@ -15,9 +15,9 @@
   <h2>Current Market Prices</h2>
 
   @if (data$ | async; as data) {
-    <div>
+    <div class="price-list">
       @for (item of data; track $index) {
-        <div class="price-item">
+        <div (click)="onClick(item)" class="price-item" >
           <span class="product-name">{{ item.product_Name }}</span>
           <span class="product-price"> {{ item.price_Per_Unit }} HUF</span>
         </div>
