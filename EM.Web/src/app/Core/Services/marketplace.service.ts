@@ -8,6 +8,7 @@ export interface MarketplaceSummaryItem {
     product_Name: string;
     price_Per_Unit: number;
     unit: string;
+    
 }
 
 @Injectable({ providedIn: 'root' })
@@ -17,6 +18,6 @@ export class MarketplaceService {
   constructor(private http: HttpClient) {}
 
   getSummary(): Observable<MarketplaceSummaryItem[]> {
-    return this.http.get<MarketplaceSummaryItem[]>(`${this.baseUrl}/summary`, { withCredentials: true});
+    return this.http.get<MarketplaceSummaryItem[]>(`${this.baseUrl}/summary`);
   }
 }

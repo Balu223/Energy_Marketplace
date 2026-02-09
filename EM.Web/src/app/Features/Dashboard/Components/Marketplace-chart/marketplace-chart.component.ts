@@ -2,9 +2,12 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AsyncPipe, JsonPipe, NgIf } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
+import { ActiveElement, ChartConfiguration, ChartEvent } from 'chart.js';
 import { Observable, tap, catchError, of } from 'rxjs';
 import { MarketplaceService, MarketplaceSummaryItem } from '../../../../Core/Services/marketplace.service';
+import { DialogPosition, MatDialog } from '@angular/material/dialog';
+import { TradeDialogComponent, TradeSelectDialogComponent } from './trade-dialog.component';
+import { UserResponseDto, UserService } from '../../../../Core/Services/user.service';
 
 
 @Component({
@@ -33,7 +36,8 @@ export class MarketplaceChartComponent implements OnInit {
 
   data$!: Observable<MarketplaceSummaryItem[]>;
 
-  constructor(private marketplaceService: MarketplaceService) {}
+
+  constructor(private marketplaceService: MarketplaceService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
   this.data$ = this.marketplaceService
@@ -66,6 +70,30 @@ export class MarketplaceChartComponent implements OnInit {
     );
 
   this.data$.subscribe();
+  
+}
+
+  onChartClick(active: object[] | undefined): void {
+    if (!active || active.length === 0) {
+      return;
+    }
+
+    const firstPoint: any = active[0];
+    const index = firstPoint.index;     
+    this.data$.subscribe(d => {
+      const item = d[index];       
+      this.openTradeSelect(item);
+    });
+  }
+openTrade(event: any) {
+  let position: DialogPosition = {left: event.clientX + 'px', top: event.clientY + 'px'};
+  this.dialog.closeAll();
+  this.dialog.open(TradeSelectDialogComponent, { position });
+}
+openTradeSelect(item: MarketplaceSummaryItem) {
+  this.dialog.open(TradeSelectDialogComponent, {
+    data: item
+  });
 }
 
 }

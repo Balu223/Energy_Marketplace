@@ -8,6 +8,7 @@ export interface UserResponseDto {
   email: string;
   address: string;
   role: string;
+  credits: number;
 }
 
 @Injectable({ providedIn: 'root' })
