@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EM.API.Migrations
 {
     [DbContext(typeof(MarketplaceDbContext))]
-    [Migration("20260204154009_DefaultSeedData")]
-    partial class DefaultSeedData
+    [Migration("20260209124338_SeedData")]
+    partial class SeedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -228,6 +228,9 @@ namespace EM.API.Migrations
 
                     b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("numeric");
 
                     b.Property<int>("TransactionType")
                         .HasColumnType("integer");
