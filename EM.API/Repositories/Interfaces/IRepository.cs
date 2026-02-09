@@ -11,7 +11,7 @@ namespace EM.API.Repositories.Interfaces
         Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
-        Task RemoveAsync(T entity);
+        Task DeleteAsync(T entity);
         Task<int> SaveChangesAsync();
     }
 }

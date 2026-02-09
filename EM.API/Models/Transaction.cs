@@ -26,7 +26,7 @@ namespace EM.API.Models
         public User User { get; set; } = null!;
         public decimal Quantity { get; set; }       
         public decimal PricePerUnit { get; set; }
-        public decimal TotalPrice => Math.Round(Quantity * PricePerUnit, 2);
+        public decimal TotalPrice { get; set; }
         public Transaction_Type TransactionType { get; set; }
         public DateTimeOffset Timestamp { get; set; }
         public int Product_Id { get; set; }

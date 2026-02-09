@@ -29,7 +29,7 @@ public class Repository<T> : IRepository<T> where T : class
         => _dbSet.Update(entity);
         
 
-    public virtual async Task RemoveAsync(T entity)
+    public virtual async Task DeleteAsync(T entity)
         => _dbSet.Remove(entity);
 
     public Task<int> SaveChangesAsync()

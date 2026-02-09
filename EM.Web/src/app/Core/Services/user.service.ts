@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { AuthService } from '@auth0/auth0-angular';
 
 export interface UserResponseDto {
+  userId: number;
   username: string;
   email: string;
   address: string;
@@ -15,13 +16,25 @@ export interface UserResponseDto {
 export class UserService {
   private readonly baseUrl = 'http://localhost:5159/api';
 
+
+  private userSubject = new BehaviorSubject<UserResponseDto | null>(null);
+  user$ = this.userSubject.asObservable();
   constructor(private http: HttpClient) {}
 
+
   getMe(): Observable<UserResponseDto> {
-    return this.http.get<UserResponseDto>(`${this.baseUrl}/user/me`);
+    return this.http.get<UserResponseDto>(`${this.baseUrl}/user/me`).pipe(
+      tap(user => this.userSubject.next(user))
+    );
   }
   updateMyProfile(profile: UserResponseDto) {
     return this.http.put<UserResponseDto>(`${this.baseUrl}/user/me`, profile);
+}
+loadUser() {
+  this.getMe().subscribe();
+}
+get currentUser(): UserResponseDto | null {
+  return this.userSubject.value;
 }
 }
 @Injectable({ providedIn: 'root' })
