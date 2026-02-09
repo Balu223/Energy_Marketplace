@@ -25,8 +25,8 @@ namespace EM.API.Controllers
             var result = await _userService.GetAllUsersAsync();
             return Ok(result);
         }
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<UserResponseDto>> GetUserById(int userId)
+       /* [HttpGet("{userId}")]
+       public async Task<ActionResult<UserResponseDto>> GetUserById(int userId)
         {
             var result = await _userService.GetUserByIdAsync(userId);
             if (result == null)
@@ -35,6 +35,7 @@ namespace EM.API.Controllers
             }
             return Ok(result);
         }
+        
         [HttpPost]
         public async Task<ActionResult<UserResponseDto>> CreateUser([FromBody] CreateUserDto userDto)
         {
@@ -45,7 +46,7 @@ namespace EM.API.Controllers
             }
             return CreatedAtAction(nameof(GetUserById), new { userId = result.User_Id }, result);
         }
-
+*/
         [HttpPut("{userId:int}")]
         public async Task<ActionResult<UserResponseDto>> UpdateUser(int userId, [FromBody] UpdateProfileDto userDto)
         {
@@ -95,7 +96,8 @@ namespace EM.API.Controllers
                 Username = user.Username,
                 Email = user.Email,
                 Address = user.Address,
-                Role = user.Role
+                Role = user.Role,
+                Credits = user.Credits
                 
             };
             return Ok(dto);

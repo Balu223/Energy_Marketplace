@@ -43,7 +43,7 @@ public class UserService : IUserService
             Username = user.Username,
             Email = user.Email,
             Address = user.Address,
-            Role = user.Role
+            Role = user.Role,
         };
     }
 
@@ -52,11 +52,11 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public async Task<UserResponseDto?> GetUserByIdAsync(int userId)
+   /* public async Task<UserResponseDto?> GetUserByIdAsync(int userId)
     {
         throw new NotImplementedException();
     }
-
+*/
     public async Task<UserResponseDto?> LoginUserAsync(LoginRequestDto loginRequest)
     {
         throw new NotImplementedException();
@@ -71,39 +71,38 @@ public class UserService : IUserService
             Username = user.Username,
             Email = user.Email,
             Address = user.Address,
-            Role = user.Role
+            Role = user.Role,
+            Credits = user.Credits
         };
     }
 
-    public async Task<UserResponseDto?> UpdateUserAsync(int userId, UpdateProfileDto userDto)
+public async Task<UserResponseDto?> UpdateUserAsync(int userId, UpdateProfileDto userDto)
+{
+    var user = await _userRepository.GetByIdAsync(userId);
+    if (user == null)
     {
-        var user = await _userRepository.GetUserById(userId);
-        if (user == null)
-        {
-            return null;
-        }
-        else
-        {
-            user.Username = userDto.Username;
-            user.Email = userDto.Email;
-            user.Address = userDto.Address;
-            user.Role = userDto.Role;
-            user.UpdatedAt = userDto.UpdatedAt;
-
-            var updatedUser = await _userRepository.UpdateUserAsync(userId, user);
-            if (updatedUser == null)
-            {
-                return null;
-            }
-            return new UserResponseDto
-            {
-                User_Id = updatedUser.User_Id,
-                Username = updatedUser.Username,
-                Email = updatedUser.Email,
-                Address = updatedUser.Address,
-                Role = updatedUser.Role,
-                UpdatedAt = updatedUser.UpdatedAt
-            };
-        }
+        return null;
     }
+
+    user.Username = userDto.Username;
+    user.Email = userDto.Email;
+    user.Address = userDto.Address;
+    user.Role = userDto.Role;
+    user.UpdatedAt = userDto.UpdatedAt;
+    user.Credits = userDto.Credits;
+
+    await _userRepository.UpdateAsync(user);
+
+    return new UserResponseDto
+    {
+        User_Id = user.User_Id,
+        Username = user.Username,
+        Email = user.Email,
+        Address = user.Address,
+        Role = user.Role,
+        UpdatedAt = user.UpdatedAt,
+        Credits = user.Credits
+    };
+}
+
 }
