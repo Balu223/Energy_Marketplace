@@ -3,6 +3,7 @@ import { MarketplaceChartComponent } from './Features/Dashboard/Components/Marke
 import { AppComponent } from './app.component';
 import { authGuard } from './Core/Guards/auth.guard';
 import { UserProfileComponent } from './Features/Dashboard/Components/Userprofile/userprofile.component';
+import { UserInventoryComponent } from './Features/Dashboard/Components/User-inventory/user-inventory.component';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,11 @@ export const routes: Routes = [
     {
     path: 'profile',
     component: UserProfileComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'inventory',
+    component: UserInventoryComponent,
     canActivate: [authGuard]
   },
 ];

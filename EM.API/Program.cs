@@ -50,6 +50,9 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITradingService, TradingService>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 
 
