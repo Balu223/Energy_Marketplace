@@ -1,0 +1,29 @@
+<section class="marketplace-chart" >
+@if (inventoryData$ | async; as data) {
+  <canvas baseChart (chartClick)="onChartClick($event.active)"
+          [data]="barChartData"
+          [options]="barChartOptions"
+          chartType="bar">
+          
+  </canvas>
+} 
+   @else {
+      <div>Loading...</div>
+}
+<section class="show-prices">
+  <h2>Current Market Prices</h2>
+
+  @if (data$ | async; as data) {
+    <div class="price-list">
+      @for (item of data; track $index) {
+        <div (click)="onClick(item)" class="price-item" >
+          <span class="product-name">{{ item.product_Name }}</span>
+          <span class="product-price"> {{ item.price_Per_Unit }} HUF</span>
+        </div>
+      }
+    </div>
+  } @else {
+    <p>Loading prices...</p>
+  }
+
+</section>
