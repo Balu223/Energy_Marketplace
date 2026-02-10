@@ -378,7 +378,7 @@ canvas {
   color: #c9d1d9;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   float: right;
-  margin-top: 12px;
+  margin-top: -20px;
 }
 
 .credits-label {
@@ -444,10 +444,14 @@ canvas {
 .trade-label {
   min-width: 80px;
   white-space: nowrap;
+  margin-bottom: 10px;
+  
 }
 
 .trade-input-field {
   flex: 1 1 auto; 
+
+
 }
 
 .price-info {
@@ -472,4 +476,15 @@ canvas {
 .snackbar-error {
   background-color: #c62828;
   color: #fff;
+}
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-outline .mdc-text-field--outlined .mdc-notched-outline,
+.no-outline .mdc-text-field--outlined .mdc-notched-outline__leading,
+.no-outline .mdc-text-field--outlined .mdc-notched-outline__notch,
+.no-outline .mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border: none !important;
 }

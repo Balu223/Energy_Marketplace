@@ -34,7 +34,7 @@ import { Observable } from 'rxjs';
           alt="Energy Marketplace Logo"
           class="em-logo"
         />
-        <h1 class="app-title">Main Marketplace</h1>
+        <h1 class="app-title"></h1>
 <div style="position: relative">
   <div class="header-actions">
     @if (auth.isAuthenticated$ | async) {
@@ -46,16 +46,15 @@ import { Observable } from 'rxjs';
       <app-login-button />
     }
   </div>
-  @if (auth.isAuthenticated$ | async) {
-  <div class="credits-card">
-  <span class="credits-label">Credits</span>
-  <span class="credits-value">{{ (userdata$ | async)?.credits }} HUF</span>
-</div>}
+
 </div>
 
-
       </header>
-
+      @if (auth.isAuthenticated$ | async) {
+      <div class="credits-card">
+      <span class="credits-label">Credits</span>
+      <span class="credits-value">{{ (userdata$ | async)?.credits }} HUF</span>
+      </div>}
       @if (!(auth.isLoading$ | async) && !(auth.error$ | async)) {
         @if (isSummaryPage()) {
           <main class="page-content">
