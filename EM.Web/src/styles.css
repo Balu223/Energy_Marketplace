@@ -372,6 +372,48 @@ canvas {
     padding: 6px 8px;
   }
 }
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background-color: #0d1117;
+  border: 1px solid #21262d;
+}
+
+/* jobb oldal: a két ár egymás alatt vagy egymás mellett */
+.price-pair {
+  display: flex;
+  flex-direction: column;       /* mobilbarát, alá-fölé */
+  align-items: flex-end;
+  gap: 2px;
+}
+
+/* közös árstílus */
+.product-price {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Purchase (buy) – zöld */
+.product-price-purchase {
+  color: #3fb950;
+}
+
+/* Sale (sell) – narancs/piros */
+.product-price-sale {
+  color: #f97316;
+}
+
+/* ha desktopon egymás mellé tennéd a két árat: */
+@media (min-width: 768px) {
+  .price-pair {
+    flex-direction: row;
+    gap: 12px;
+  }
+}
 .credits-card {
   display: inline-flex;
   align-items: center;
@@ -683,5 +725,54 @@ canvas {
   .marketplace-section input[type="number"] {
     width: 100px;
   }
+}
+/* Oszlopfejlécek színezése */
+.col-purchase {
+  color: #3fb950;          /* zöld */
+}
+
+.col-sale {
+  color: #f97316;          /* narancs */
+}
+
+/* Price cell common */
+.price-cell {
+  white-space: nowrap;
+}
+
+/* Current árak vizuális badge-ként */
+.price-purchase {
+  color: #3fb950;
+  font-weight: 600;
+}
+
+.price-sale {
+  color: #f97316;
+  font-weight: 600;
+}
+
+/* Input mezők színezése */
+.input-purchase {
+  border-color: #234f2d;
+}
+
+.input-purchase:focus {
+  border-color: #3fb950;
+  box-shadow: 0 0 0 1px rgba(63, 185, 80, 0.4);
+}
+
+.input-sale {
+  border-color: #7c2d12;
+}
+
+.input-sale:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.4);
+}
+
+/* Ha jobban el akarod választani a párokat: középső vertikális csík */
+.marketplace-table th:nth-child(4),
+.marketplace-table td:nth-child(4) {
+  border-right: 2px solid #30363d;   /* Current purchase/sale után elválasztó */
 }
 
