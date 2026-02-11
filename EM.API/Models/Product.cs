@@ -24,7 +24,8 @@ namespace EM.API.Models
         public int Current_Quantity { get; set; }
         [Required]
         public Units Unit { get; set; }
-        public decimal Price_Per_Unit { get; set; }
+        public decimal Sale_Price_Per_Unit { get; set; }
+        public decimal Purchase_Price_Per_Unit { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
      

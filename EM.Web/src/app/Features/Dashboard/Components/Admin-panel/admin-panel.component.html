@@ -41,8 +41,10 @@
                 <tr>
                     <th>Item ID</th>
                     <th>Item Name</th>
-                    <th>Current Price</th>
-                    <th>New Price</th>
+                    <th>Current Purchase Price</th>
+                    <th>Current Sale Price</th>
+                    <th>New Purchase Price</th>
+                    <th>New Sale Price</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -50,9 +52,13 @@
                 <tr *ngFor="let item of data$ | async">
                     <td>{{ item.product_Id }}</td>
                     <td>{{ item.product_Name }}</td>
-                    <td>${{ item.price_Per_Unit }}</td>
+                    <td>${{ item.purchase_Price_Per_Unit }}</td>
+                    <td>${{ item.sale_Price_Per_Unit }}</td>
                     <td>
-                        <input type="number" placeholder="New price">
+                        <input type="number" placeholder="New purchase price" [(ngModel)]="newPurchasePrice">
+                    </td>
+                    <td>
+                        <input type="number" placeholder="New sale price" [(ngModel)]="newSalePrice">
                     </td>
                     <td>
                         <button (click)="updatePrice(item)" class="btn-update">Update</button>

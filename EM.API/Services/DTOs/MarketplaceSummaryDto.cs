@@ -8,8 +8,8 @@ namespace EM.API.Services.DTOs
         public decimal Quantity { get; set; }
 
         public string Product_Name { get; set; } = null!;
-        public decimal Price_Per_Unit { get; set; }
-
+        public decimal Purchase_Price_Per_Unit { get; set; }
+        public decimal Sale_Price_Per_Unit { get; set; }
         public string? Unit { get; set; } 
 
     }

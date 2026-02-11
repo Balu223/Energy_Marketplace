@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { MockPlatformLocation } from "@angular/common/testing";
-import { Component, inject, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Component, inject, NgModule, OnInit } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
@@ -13,10 +13,11 @@ import { UserResponseDto, UserService } from "../../../../Core/Services/user.ser
 import { UpdateProfileButtonComponent } from "../Userprofile/updateprofile-button.component";
 import { MarketplaceService, MarketplaceSummaryItem } from "../../../../Core/Services/marketplace.service";
 import { Observable } from "rxjs";
+import { NgModel } from "@angular/forms";
 
 @Component({  selector: 'admin-panel',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, AuthModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, AuthModule, FormsModule],
   templateUrl: './admin-panel.component.html',
 })
 
@@ -24,6 +25,8 @@ import { Observable } from "rxjs";
 export class AdminPanelComponent implements OnInit {
   users?: UserResponseDto[];
   data$!: Observable<MarketplaceSummaryItem[]>;
+  newPurchasePrice: number | null = null;
+  newSalePrice: number | null = null;
   constructor(private auth: AuthService, private userService: UserService, private marketplaceService: MarketplaceService) {}
 
   ngOnInit(): void {
@@ -49,7 +52,6 @@ export class AdminPanelComponent implements OnInit {
     console.log('Create new user');
     }
     updatePrice(item: MarketplaceSummaryItem) {
-    // Implement update price logic here
     console.log('Update price for item:', item);
     }
 

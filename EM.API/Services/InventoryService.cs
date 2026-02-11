@@ -25,7 +25,8 @@ public class InventoryService : IInventoryService
                 Product_Id = m.Product_Id,
                 Quantity = m.Quantity,
                 Product_Name = m.Product.Product_Name,
-                Price_Per_Unit = m.Product.Price_Per_Unit,
+                Purchase_Price_Per_Unit = m.Product.Purchase_Price_Per_Unit,
+                Sale_Price_Per_Unit = m.Product.Sale_Price_Per_Unit,
                 Unit = m.Product.Unit.ToString()
             });
         }
@@ -39,7 +40,8 @@ public class InventoryService : IInventoryService
             Product_Id = m.Product_Id,
             Quantity = m.Quantity,
             Product_Name = m.Product.Product_Name,
-            Price_Per_Unit = m.Product.Price_Per_Unit,
+            Purchase_Price_Per_Unit = m.Product.Purchase_Price_Per_Unit,
+            Sale_Price_Per_Unit = m.Product.Sale_Price_Per_Unit,
             Unit = m.Product.Unit.ToString()
 
         }).ToList();

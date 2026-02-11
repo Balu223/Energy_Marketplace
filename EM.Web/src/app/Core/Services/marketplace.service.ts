@@ -6,7 +6,8 @@ export interface MarketplaceSummaryItem {
     product_Id: number;
     quantity: number;
     product_Name: string;
-    price_Per_Unit: number;
+    purchase_Price_Per_Unit: number;
+    sale_Price_Per_Unit: number;
     unit: string;
     
 }

@@ -24,7 +24,8 @@ namespace EM.API.Migrations
                     Initial_Quantity = table.Column<int>(type: "integer", nullable: false),
                     Current_Quantity = table.Column<int>(type: "integer", nullable: false),
                     Unit = table.Column<string>(type: "text", nullable: false),
-                    Price_Per_Unit = table.Column<decimal>(type: "numeric", nullable: false),
+                    Sale_Price_Per_Unit = table.Column<decimal>(type: "numeric", nullable: false),
+                    Purchase_Price_Per_Unit = table.Column<decimal>(type: "numeric", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -161,12 +162,12 @@ namespace EM.API.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Product_Id", "CreatedDate", "Current_Quantity", "Initial_Quantity", "Price_Per_Unit", "Product_Name", "Unit", "UpdatedDate" },
+                columns: new[] { "Product_Id", "CreatedDate", "Current_Quantity", "Initial_Quantity", "Product_Name", "Purchase_Price_Per_Unit", "Sale_Price_Per_Unit", "Unit", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1000, 1000, 150.00m, "Electricity", "kWh", null },
-                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 500, 500, 45.00m, "Natural Gas", "m3", null },
-                    { 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 200, 200, 280.00m, "Crude Oil", "liters", null }
+                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1000, 1000, "Electricity", 15.00m, 18.00m, "kWh", null },
+                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 500, 500, "Natural Gas", 4.50m, 5.00m, "m3", null },
+                    { 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 200, 200, "Crude Oil", 28.00m, 30.00m, "liters", null }
                 });
 
             migrationBuilder.InsertData(

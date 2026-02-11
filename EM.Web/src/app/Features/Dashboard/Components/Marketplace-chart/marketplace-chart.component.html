@@ -19,7 +19,8 @@
       @for (item of data; track $index) {
         <div (click)="onClick(item)" class="price-item" >
           <span class="product-name">{{ item.product_Name }}</span>
-          <span class="product-price"> {{ item.price_Per_Unit }} HUF</span>
+          <span class="product-price">Purchase Price: {{ item.purchase_Price_Per_Unit }} HUF</span>
+          <span class="product-price">Sale Price: {{ item.sale_Price_Per_Unit }} HUF</span>
         </div>
       }
     </div>

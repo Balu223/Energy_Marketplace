@@ -42,7 +42,7 @@ export type TradeMode = 'buy' | 'sell';
   </div>
 
   <div class="price-info">
-    <p><strong>Price:</strong> {{ data.pricePerUnit }} HUF / {{ data.unit }}</p>
+    <p><strong>Price:</strong>{{ data.mode === 'buy' ? 'Buy' : 'Sell' }} {{ data[data.mode === 'buy' ? 'purchasePricePerUnit' : 'salePricePerUnit'] }} HUF / {{ data.unit }}</p>
   </div>
 
   <div class="price-info">
@@ -73,7 +73,8 @@ export class TradeDialogComponent {
       productName: string;
       quantity: number;
       unit: string;
-      pricePerUnit: number;
+      purchasePricePerUnit: number;
+      salePricePerUnit: number;
       availableQuantity: number;
       productId: number;
     }
@@ -100,7 +101,7 @@ export class TradeDialogComponent {
   }
   get totalPrice(): number {
     const qty = this.form.get('quantity')?.value ?? 0;
-    return qty * this.data.pricePerUnit;
+    return qty * this.data[this.data.mode === 'buy' ? 'purchasePricePerUnit' : 'salePricePerUnit'];
   }
 
   close() {
@@ -211,7 +212,8 @@ export class TradeSelectDialogComponent {
         productName: this.marketplaceSummaryItem.product_Name,
         quantity: 0,
         unit: this.marketplaceSummaryItem.unit,
-        pricePerUnit: this.marketplaceSummaryItem.price_Per_Unit,
+        purchasePricePerUnit: this.marketplaceSummaryItem.purchase_Price_Per_Unit,
+        salePricePerUnit: this.marketplaceSummaryItem.sale_Price_Per_Unit,
         availableQuantity: this.marketplaceSummaryItem.quantity,
         productId: this.marketplaceSummaryItem.product_Id
       },

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EM.API.Migrations
 {
     [DbContext(typeof(MarketplaceDbContext))]
-    [Migration("20260209124338_SeedData")]
+    [Migration("20260211093011_SeedData")]
     partial class SeedData
     {
         /// <inheritdoc />
@@ -121,12 +121,15 @@ namespace EM.API.Migrations
                     b.Property<int>("Initial_Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("Price_Per_Unit")
-                        .HasColumnType("numeric");
-
                     b.Property<string>("Product_Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Purchase_Price_Per_Unit")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Sale_Price_Per_Unit")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Unit")
                         .IsRequired()
@@ -146,8 +149,9 @@ namespace EM.API.Migrations
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Current_Quantity = 1000,
                             Initial_Quantity = 1000,
-                            Price_Per_Unit = 150.00m,
                             Product_Name = "Electricity",
+                            Purchase_Price_Per_Unit = 15.00m,
+                            Sale_Price_Per_Unit = 18.00m,
                             Unit = "kWh"
                         },
                         new
@@ -156,8 +160,9 @@ namespace EM.API.Migrations
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Current_Quantity = 500,
                             Initial_Quantity = 500,
-                            Price_Per_Unit = 45.00m,
                             Product_Name = "Natural Gas",
+                            Purchase_Price_Per_Unit = 4.50m,
+                            Sale_Price_Per_Unit = 5.00m,
                             Unit = "m3"
                         },
                         new
@@ -166,8 +171,9 @@ namespace EM.API.Migrations
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Current_Quantity = 200,
                             Initial_Quantity = 200,
-                            Price_Per_Unit = 280.00m,
                             Product_Name = "Crude Oil",
+                            Purchase_Price_Per_Unit = 28.00m,
+                            Sale_Price_Per_Unit = 30.00m,
                             Unit = "liters"
                         });
                 });

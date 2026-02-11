@@ -45,7 +45,7 @@ var inventoryItem = await _context.InventoryItems
 
                     await _context.InventoryItems.AddAsync(inventoryItem);
                 }
-                var totalPrice = quantity * product.Price_Per_Unit;
+                var totalPrice = quantity * product.Purchase_Price_Per_Unit;
                 
                 if (user.Credits < totalPrice)
                     throw new InvalidOperationException("User does not have enough credits to complete the purchase.");
@@ -100,7 +100,7 @@ var inventoryItem = await _context.InventoryItems
 
                     await _context.InventoryItems.AddAsync(inventoryItem);
                 }
-                var totalPrice = quantity * product.Price_Per_Unit;
+                var totalPrice = quantity * product.Sale_Price_Per_Unit;
                 
                 if (inventoryItem.Quantity < quantity)
                     throw new InvalidOperationException("User does not have enough quantity in inventory to complete the sale.");
