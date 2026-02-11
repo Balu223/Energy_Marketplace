@@ -19,12 +19,7 @@ namespace EM.API.Controllers
             _currentUserService = currentUserService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAllUsers()
-        {
-            var result = await _userService.GetAllUsersAsync();
-            return Ok(result);
-        }
+
        /* [HttpGet("{userId}")]
        public async Task<ActionResult<UserResponseDto>> GetUserById(int userId)
         {

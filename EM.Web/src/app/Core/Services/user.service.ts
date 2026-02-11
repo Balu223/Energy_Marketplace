@@ -36,7 +36,11 @@ loadUser() {
 get currentUser(): UserResponseDto | null {
   return this.userSubject.value;
 }
+listUsers(): Observable<UserResponseDto[]> {
+  return this.http.get<UserResponseDto[]>(`${this.baseUrl}/admin/users`);
 }
+}
+
 @Injectable({ providedIn: 'root' })
 export class DebugTokenService {
   constructor(private auth: AuthService) {}

@@ -3,15 +3,14 @@ import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
-  selector: 'marketplace-chart-button',
+  selector: 'admin-panel-button',
   standalone: true,
-  template: `<button (click)="ChartRedirect()">Marketplace</button>`
+  template: `<button (click)="ChartRedirect()">Admin Panel</button>`
 })
-export class MarketplaceChartButtonComponent {
+export class AdminPanelButtonComponent {
   constructor(private router: Router) {}
 
   ChartRedirect() {
-    this.router.navigate(['/summary']);
+    this.router.navigate(['/admin']);
   }
 }
-
