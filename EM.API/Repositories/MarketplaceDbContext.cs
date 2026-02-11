@@ -65,7 +65,8 @@ namespace EM.API.Repositories
         new Product { 
             Product_Id = 1,
             Product_Name = "Electricity", 
-            Price_Per_Unit = 150.00m, 
+            Purchase_Price_Per_Unit = 15.00m, 
+            Sale_Price_Per_Unit = 18.00m,
             Initial_Quantity = 1000, 
             Current_Quantity = 1000, 
             Unit = Models.Enums.Units.kWh },
@@ -73,7 +74,8 @@ namespace EM.API.Repositories
         new Product { 
             Product_Id = 2, 
             Product_Name = "Natural Gas", 
-            Price_Per_Unit = 45.00m, 
+            Purchase_Price_Per_Unit = 4.50m, 
+            Sale_Price_Per_Unit = 5.00m,
             Initial_Quantity = 500, 
             Current_Quantity = 500, 
             Unit = Models.Enums.Units.m3 },
@@ -81,7 +83,8 @@ namespace EM.API.Repositories
         new Product { 
             Product_Id = 3, 
             Product_Name = "Crude Oil", 
-            Price_Per_Unit = 280.00m, 
+            Purchase_Price_Per_Unit = 28.00m, 
+            Sale_Price_Per_Unit = 30.00m,
             Initial_Quantity = 200, 
             Current_Quantity = 200, 
             Unit = Models.Enums.Units.liters }

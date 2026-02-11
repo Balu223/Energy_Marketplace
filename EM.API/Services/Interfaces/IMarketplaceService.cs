@@ -9,5 +9,6 @@ namespace EM.API.Services.Interfaces
     public interface IMarketplaceService
     {
         Task<IEnumerable<MarketplaceSummaryDto>> GetSummaryAsync();
+        Task<MarketplaceSummaryDto> UpdatePrice(MarketplaceSummaryDto updatePriceDto);
     }
 }

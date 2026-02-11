@@ -4,7 +4,7 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { AuthService } from '@auth0/auth0-angular';
 
 export interface UserResponseDto {
-  userId: number;
+  user_Id: number;
   username: string;
   email: string;
   address: string;
@@ -36,7 +36,11 @@ loadUser() {
 get currentUser(): UserResponseDto | null {
   return this.userSubject.value;
 }
+listUsers(): Observable<UserResponseDto[]> {
+  return this.http.get<UserResponseDto[]>(`${this.baseUrl}/admin/users`);
 }
+}
+
 @Injectable({ providedIn: 'root' })
 export class DebugTokenService {
   constructor(private auth: AuthService) {}

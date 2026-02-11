@@ -11,11 +11,12 @@ import { UserProfileButtonComponent } from "./Features/Dashboard/Components/User
 import { UserInventoryButtonComponent } from "./Features/Dashboard/Components/User-inventory/user-inventory-button.component";
 import { UserResponseDto, UserService } from './Core/Services/user.service';
 import { Observable } from 'rxjs';
+import { AdminPanelButtonComponent } from './Features/Dashboard/Components/Admin-panel/admin-panel-button.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, LoginButtonComponent, LogoutButtonComponent, MarketplaceChartButtonComponent, RouterOutlet, UserProfileButtonComponent, AuthModule, UserInventoryButtonComponent],
+  imports: [CommonModule, AsyncPipe, LoginButtonComponent, LogoutButtonComponent, MarketplaceChartButtonComponent, RouterOutlet, UserProfileButtonComponent, AuthModule, UserInventoryButtonComponent, AdminPanelButtonComponent],
   template: `
     <div class="app-container">
       @if (auth.isLoading$ | async) {
@@ -29,33 +30,35 @@ import { Observable } from 'rxjs';
       }
 
       <header class="main-header">
-        <img
-          src="/logo.png"
-          alt="Energy Marketplace Logo"
-          class="em-logo"
-        />
-        <h1 class="app-title">Main Marketplace</h1>
-<div style="position: relative">
-  <div class="header-actions">
+  <div class="header-left">
+    <img
+      src="/logo.png"
+      alt="Energy Marketplace Logo"
+      class="em-logo"
+    />
+    <h1 class="app-title"></h1>
+    @if (auth.isAuthenticated$ | async) {
+      <admin-panel-button class="admin-btn"></admin-panel-button>
+    }
+  </div>
+
+  <div class="header-right">
     @if (auth.isAuthenticated$ | async) {
       <user-inventory-button></user-inventory-button>
       <marketplace-chart-button></marketplace-chart-button>
       <user-profile-button></user-profile-button>
-      <app-logout-button />
+      <div class="login-separator"></div>
+      <app-logout-button class="logout-btn" />
     } @else {
       <app-login-button />
     }
   </div>
-  @if (auth.isAuthenticated$ | async) {
-  <div class="credits-card">
-  <span class="credits-label">Credits</span>
-  <span class="credits-value">{{ (userdata$ | async)?.credits }} HUF</span>
-</div>}
-</div>
-
-
-      </header>
-
+</header>
+      @if ((auth.isAuthenticated$ | async) && !(isAdminPanel())){
+      <div class="credits-card">
+      <span class="credits-label">Credits</span>
+      <span class="credits-value">{{ (userdata$ | async)?.credits }} HUF</span>
+      </div>}
       @if (!(auth.isLoading$ | async) && !(auth.error$ | async)) {
         @if (isSummaryPage()) {
           <main class="page-content">
@@ -66,6 +69,10 @@ import { Observable } from 'rxjs';
             <router-outlet></router-outlet>
           </main>
         } @else if (isInventoryPage()) {
+          <main class="page-content">
+            <router-outlet></router-outlet>
+          </main>
+        } @else if (isAdminPanel()) {
           <main class="page-content">
             <router-outlet></router-outlet>
           </main>
@@ -98,6 +105,7 @@ export class AppComponent {
   protected readonly isSummaryPage = signal(false);
   protected readonly isProfilePage = signal(false);
   protected readonly isInventoryPage = signal(false);
+  protected readonly isAdminPanel = signal(false);
   
   constructor(private userService: UserService) {
     this.router.events
@@ -106,6 +114,7 @@ export class AppComponent {
         this.isSummaryPage.set(this.router.url.startsWith('/summary'));
         this.isProfilePage.set(this.router.url.startsWith('/profile'));
         this.isInventoryPage.set(this.router.url.startsWith('/inventory'));
+        this.isAdminPanel.set(this.router.url.startsWith('/admin'));
       });
         this.userdata$ = this.userService.user$;
         this.userService.getMe().subscribe();

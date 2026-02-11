@@ -31,7 +31,15 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
     {
-        throw new NotImplementedException();
+        var users = await _userRepository.GetAllAsync();
+        return users.Select(u => new UserResponseDto
+        {
+            User_Id = u.User_Id,
+            Username = u.Username,
+            Email = u.Email,
+            Role = u.Role.ToString(),
+            Credits = u.Credits
+        }).ToList();
     }
 
     public async Task<UserProfileDto> GetCurrentProfileAsync()

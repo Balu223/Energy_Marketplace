@@ -4,19 +4,20 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MarketplaceSummaryItem } from '../../../../Core/Services/marketplace.service';
 import { MatFormField, MatInputModule, MatLabel } from "@angular/material/input";
-import { FormBuilder, FormGroup, NumberValueAccessor, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NumberValueAccessor, ReactiveFormsModule } from '@angular/forms';
 import { UserResponseDto, UserService } from '../../../../Core/Services/user.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
 import { TradeRequestDto, TradeService } from '../../../../Core/Services/trade.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule, MatIcon } from '@angular/material/icon';
 
 export type TradeMode = 'buy' | 'sell';
 
 @Component({
   selector: 'trade-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatFormField, MatInputModule, ReactiveFormsModule, MatSnackBarModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatFormField, MatInputModule, ReactiveFormsModule, MatSnackBarModule, MatIcon],
   template: `
   <form [formGroup]="form" class="trade-dialog">
 
@@ -25,15 +26,23 @@ export type TradeMode = 'buy' | 'sell';
   <p><strong>Product:</strong> {{ data.productName }}</p>
 
   <div class="trade-row">
-    <span class="trade-label">Quantity:</span>
+    <span class="trade-label"><strong>Quantity:</strong></span>
+    <mat-form-field class="qty-field">
+  <button mat-icon-button matPrefix type="button" (click)="decrement()">
+    <mat-icon>remove</mat-icon>
+  </button>
 
-    <mat-form-field class="trade-input-field">
-      <input matInput formControlName="quantity" type="number" (input)="checkValue($event)"/>
-    </mat-form-field>
+  <input
+    matInput class="quantity-input no-spinner no-outline" formControlName="quantity" type="number" appearance="none" (input)="checkValue($event)" />
+
+  <button mat-icon-button matSuffix type="button" (click)="increment()">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-form-field>
   </div>
 
   <div class="price-info">
-    <p><strong>Price:</strong> {{ data.pricePerUnit }} HUF / {{ data.unit }}</p>
+    <p><strong>Price:</strong>{{ data.mode === 'buy' ? 'Buy' : 'Sell' }} {{ data[data.mode === 'buy' ? 'purchasePricePerUnit' : 'salePricePerUnit'] }} HUF / {{ data.unit }}</p>
   </div>
 
   <div class="price-info">
@@ -64,7 +73,8 @@ export class TradeDialogComponent {
       productName: string;
       quantity: number;
       unit: string;
-      pricePerUnit: number;
+      purchasePricePerUnit: number;
+      salePricePerUnit: number;
       availableQuantity: number;
       productId: number;
     }
@@ -91,7 +101,7 @@ export class TradeDialogComponent {
   }
   get totalPrice(): number {
     const qty = this.form.get('quantity')?.value ?? 0;
-    return qty * this.data.pricePerUnit;
+    return qty * this.data[this.data.mode === 'buy' ? 'purchasePricePerUnit' : 'salePricePerUnit'];
   }
 
   close() {
@@ -104,6 +114,19 @@ export class TradeDialogComponent {
       this.form.get('quantity')?.setValue(0);
     }
   }
+  increment() {
+  const control = this.form.get('quantity');
+  const current = Number(control?.value ?? 0);
+  control?.setValue(current + 1);
+}
+
+decrement() {
+  const control = this.form.get('quantity');
+  const current = Number(control?.value ?? 0);
+  if (current > 0) {
+    control?.setValue(current - 1);
+  }
+}
 
   confirmTrade() {
     const quantity = this.form.get('quantity')?.value ?? 0;
@@ -133,7 +156,7 @@ export class TradeDialogComponent {
       return;
     }
     const tradeRequest: TradeRequestDto = {
-      user_Id: this.userData ? this.userData.userId : 0,
+      user_Id: this.userData ? this.userData.user_Id : 0,
       productId: this.data.productId,
       quantity
     };
@@ -189,7 +212,8 @@ export class TradeSelectDialogComponent {
         productName: this.marketplaceSummaryItem.product_Name,
         quantity: 0,
         unit: this.marketplaceSummaryItem.unit,
-        pricePerUnit: this.marketplaceSummaryItem.price_Per_Unit,
+        purchasePricePerUnit: this.marketplaceSummaryItem.purchase_Price_Per_Unit,
+        salePricePerUnit: this.marketplaceSummaryItem.sale_Price_Per_Unit,
         availableQuantity: this.marketplaceSummaryItem.quantity,
         productId: this.marketplaceSummaryItem.product_Id
       },

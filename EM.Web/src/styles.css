@@ -20,7 +20,7 @@ html, body {
 .main-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* bal blokk – jobb blokk */
   gap: 16px;
   padding: 12px 20px;
   border-radius: 12px;
@@ -29,14 +29,19 @@ html, body {
   margin-bottom: 24px;
 }
 
-.em-logo {
-  height: 100px;
-}
-
-.header-actions {
+.header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;       /* logo, title, admin között */
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;       /* jobb oldali gombok között */
+}
+.em-logo {
+  height: 100px;
 }
 
 /* GOMBOK */
@@ -367,6 +372,48 @@ canvas {
     padding: 6px 8px;
   }
 }
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background-color: #0d1117;
+  border: 1px solid #21262d;
+}
+
+/* jobb oldal: a két ár egymás alatt vagy egymás mellett */
+.price-pair {
+  display: flex;
+  flex-direction: column;       /* mobilbarát, alá-fölé */
+  align-items: flex-end;
+  gap: 2px;
+}
+
+/* közös árstílus */
+.product-price {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Purchase (buy) – zöld */
+.product-price-purchase {
+  color: #3fb950;
+}
+
+/* Sale (sell) – narancs/piros */
+.product-price-sale {
+  color: #f97316;
+}
+
+/* ha desktopon egymás mellé tennéd a két árat: */
+@media (min-width: 768px) {
+  .price-pair {
+    flex-direction: row;
+    gap: 12px;
+  }
+}
 .credits-card {
   display: inline-flex;
   align-items: center;
@@ -378,7 +425,7 @@ canvas {
   color: #c9d1d9;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   float: right;
-  margin-top: 12px;
+  margin-top: -20px;
 }
 
 .credits-label {
@@ -444,10 +491,14 @@ canvas {
 .trade-label {
   min-width: 80px;
   white-space: nowrap;
+  margin-bottom: 10px;
+  
 }
 
 .trade-input-field {
   flex: 1 1 auto; 
+
+
 }
 
 .price-info {
@@ -473,3 +524,255 @@ canvas {
   background-color: #c62828;
   color: #fff;
 }
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-outline .mdc-text-field--outlined .mdc-notched-outline,
+.no-outline .mdc-text-field--outlined .mdc-notched-outline__leading,
+.no-outline .mdc-text-field--outlined .mdc-notched-outline__notch,
+.no-outline .mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border: none !important;
+}
+
+.logout-btn button {
+  background: #9e2222;
+  color: #fff;
+}
+
+.logout-btn button:hover {
+  background: #e53935;
+}
+.admin-btn  button{
+  background: #1e40af;
+  color: #fff;
+}
+.admin-btn button:hover {
+  background: #3b82f6;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.login-separator {
+  width: 1px;
+  height: 30px;         
+  background-color: #ffffff;
+  opacity: 0.6; 
+}
+.admin-panel {
+  margin-top: 16px;
+  padding: 24px 20px 28px;
+  border-radius: 16px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  color: #c9d1d9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Fő cím */
+.admin-panel h1 {
+  margin: 0 0 20px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Szekciók */
+.admin-panel section {
+  margin-top: 24px;
+}
+
+.admin-panel h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+/* Táblák */
+.admin-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.admin-panel thead {
+  background-color: #0d1117;
+}
+
+.admin-panel th,
+.admin-panel td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #30363d;
+  text-align: left;
+}
+
+.admin-panel th {
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.admin-panel tbody tr:hover {
+  background-color: #11151b;
+}
+
+/* Users táblázat */
+.users-section {
+  margin-bottom: 32px;
+}
+
+/* Marketplace táblázat */
+.marketplace-section input[type="number"] {
+  width: 120px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  background-color: #0d1117;
+  color: #e5e5e5;
+  font-size: 14px;
+}
+
+.marketplace-section input[type="number"]:focus {
+  outline: none;
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.3);
+}
+
+/* Gombok */
+.admin-panel button {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+/* Primary */
+.btn-primary {
+  background: #238636;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  background: #2ea043;
+  box-shadow: 0 0 0 1px rgba(63, 185, 80, 0.3);
+}
+
+/* Edit */
+.btn-edit {
+  background: #1f6feb;
+  color: #fff;
+  margin-right: 6px;
+}
+
+.btn-edit:hover {
+  background: #388bfd;
+}
+
+/* Delete / Deactivate */
+.btn-delete {
+  background: #b42318;
+  color: #fff;
+  margin-right: 6px;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+/* Update price */
+.btn-update {
+  background: #f15a29;
+  color: #fff;
+}
+
+.btn-update:hover {
+  background: #ff7a3c;
+}
+
+/* Actions cell */
+.users-table td:last-child,
+.marketplace-table td:last-child {
+  white-space: nowrap;
+}
+
+/* Responsív */
+@media (max-width: 768px) {
+  .admin-panel {
+    padding: 16px 12px 20px;
+  }
+
+  .admin-panel table {
+    font-size: 13px;
+  }
+
+  .admin-panel th,
+  .admin-panel td {
+    padding: 8px 8px;
+  }
+
+  .marketplace-section input[type="number"] {
+    width: 100px;
+  }
+}
+/* Oszlopfejlécek színezése */
+.col-purchase {
+  color: #3fb950;          /* zöld */
+}
+
+.col-sale {
+  color: #f97316;          /* narancs */
+}
+
+/* Price cell common */
+.price-cell {
+  white-space: nowrap;
+}
+
+/* Current árak vizuális badge-ként */
+.price-purchase {
+  color: #3fb950;
+  font-weight: 600;
+}
+
+.price-sale {
+  color: #f97316;
+  font-weight: 600;
+}
+
+/* Input mezők színezése */
+.input-purchase {
+  border-color: #234f2d;
+}
+
+.input-purchase:focus {
+  border-color: #3fb950;
+  box-shadow: 0 0 0 1px rgba(63, 185, 80, 0.4);
+}
+
+.input-sale {
+  border-color: #7c2d12;
+}
+
+.input-sale:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.4);
+}
+
+/* Ha jobban el akarod választani a párokat: középső vertikális csík */
+.marketplace-table th:nth-child(4),
+.marketplace-table td:nth-child(4) {
+  border-right: 2px solid #30363d;   /* Current purchase/sale után elválasztó */
+}
+
