@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserProfileDto } from '../../Models/userprofile.dto';
 import { UserResponseDto } from './user.service';
+import { MarketplaceSummaryItem } from './marketplace.service';
 
 /* export interface InventorySummaryItem {
     product_Id: number;
@@ -22,4 +23,5 @@ export class AdminService {
   getUsers(): Observable<UserResponseDto[]> {
     return this.http.get<UserResponseDto[]>(`${this.baseUrl}/admin/users`);
   }
+
 }

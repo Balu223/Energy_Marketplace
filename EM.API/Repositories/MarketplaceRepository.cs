@@ -13,4 +13,10 @@ public class MarketplaceRepository : Repository<MarketplaceItem>, IMarketplaceRe
             .Include(m => m.Product)
             .ToListAsync();
     }
+     public async Task<MarketplaceItem?> GetByProductIdWithProductAsync(int productId)
+    {
+        return await _context.MarketplaceItems
+            .Include(m => m.Product)
+            .FirstOrDefaultAsync(m => m.Product_Id == productId);
+    }
 }

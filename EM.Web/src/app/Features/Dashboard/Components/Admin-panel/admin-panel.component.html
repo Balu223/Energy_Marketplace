@@ -1,89 +1,154 @@
-<div class="admin-panel">
+<form [formGroup]="form" class="admin-panel-form">
+  <div class="admin-panel">
     <h1>Admin Panel</h1>
 
-    <!-- Users List Section -->
+    <!-- Users -->
     <section class="users-section">
-        <h2>Users Management</h2>
-        <table class="users-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Credits</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let user of users">
-                    <td>{{ user.userId }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.role }}</td>
-                    <td>{{ user.credits }}</td>
-                    <td>
-                        <button (click)="editUser(user)" class="btn-edit">Edit</button>
-                        <button (click)="deleteUser(user.userId)" class="btn-delete">Delete</button>
-                        <button (click)="deactivateUser(user.userId)" class="btn-delete">Deactivate</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <button (click)="createUser()" class="btn-primary">Add User</button>
+      <h2>Users Management</h2>
+
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Role</th>
+            <th>Credits</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        @if (users$ | async; as users) {
+          <tbody>
+            @for (user of users; track user.user_Id) {
+              <tr>
+                <td>{{ user.user_Id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.credits }}</td>
+                <td>
+                  <button (click)="editUser(user)" class="btn-edit">Edit</button>
+                  <button (click)="deleteUser(user.user_Id)" class="btn-delete">
+                    Delete
+                  </button>
+                  <button (click)="deactivateUser(user.user_Id)" class="btn-delete">
+                    Deactivate
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        } @else {
+          <tbody>
+            <tr>
+              <td colspan="7">Loading users...</td>
+            </tr>
+          </tbody>
+        }
+      </table>
+
+      <button type="button" (click)="createUser()" class="btn-primary">
+        Add User
+      </button>
     </section>
 
-    <!-- Marketplace Items Price Change Section -->
+    <!-- Marketplace -->
     <section class="marketplace-section">
-        <h2>Marketplace Items - Price Management</h2>
-        <table class="marketplace-table">
-            <thead>
-                <tr>
-                    <th>Item ID</th>
-                    <th>Item Name</th>
-                    <th>Current Purchase Price</th>
-                    <th>Current Sale Price</th>
-                    <th>New Purchase Price</th>
-                    <th>New Sale Price</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of data$ | async">
-                    <td>{{ item.product_Id }}</td>
-                    <td>{{ item.product_Name }}</td>
-                    <td>${{ item.purchase_Price_Per_Unit }}</td>
-                    <td>${{ item.sale_Price_Per_Unit }}</td>
-                    <td>
-                        <input type="number" placeholder="New purchase price" [(ngModel)]="newPurchasePrice">
-                    </td>
-                    <td>
-                        <input type="number" placeholder="New sale price" [(ngModel)]="newSalePrice">
-                    </td>
-                    <td>
-                        <button (click)="updatePrice(item)" class="btn-update">Update</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- <button (click)="openCreateItemModal()" class="btn-primary">Add Item</button> -->
-    </section>
+      <h2>Marketplace Items - Price Management</h2>
 
-    <!-- User Modal --
-    <div *ngIf="showUserModal" class="modal">
-        <div class="modal-content">
-            <span (click)="closeUserModal()" class="close">&times;</span>
-            <h3>{{ editingUser ? 'Edit User' : 'Create User' }}</h3>
-            <form (ngSubmit)="saveUser()">
-                <input [(ngModel)]="userForm.name" name="name" placeholder="Name" required>
-                <input [(ngModel)]="userForm.email" name="email" placeholder="Email" required>
-                <select [(ngModel)]="userForm.role" name="role" required>
-                    <option value="">Select Role</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                </select>
-                <button type="submit" class="btn-primary">Save</button>
-            </form>
-        </div>
-    </div> -->
-</div>
+      <table class="marketplace-table">
+        <thead>
+          <tr>
+            <th>Item ID</th>
+            <th>Item Name</th>
+            <th class="col-purchase">Current Purchase Price</th>
+            <th class="col-sale">Current Sale Price</th>
+            <th class="col-purchase">New Purchase Price</th>
+            <th class="col-sale">New Sale Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @if (items$ | async; as items) {
+            @for (item of items; let i = $index; track item.product_Id) {
+              <tr>
+                <td>{{ item.product_Id }}</td>
+                <td>{{ item.product_Name }}</td>
+
+                <td class="price-cell price-purchase">
+                  {{ item.purchase_Price_Per_Unit }} HUF
+                </td>
+
+                <td class="price-cell price-sale">
+                  {{ item.sale_Price_Per_Unit }} HUF
+                </td>
+
+                <!-- New purchase price -->
+                <td class="price-cell" formArrayName="newPurchase">
+                  <button mat-icon-button type="button" (click)="decrement(i)">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+
+                  <input
+                    matInput
+                    class="quantity-input no-spinner no-outline"
+                    type="number"
+                    [formControlName]="i"
+                  />
+
+                  <button mat-icon-button type="button" (click)="increment(i)">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </td>
+
+                <!-- New sale price -->
+                <td class="price-cell" formArrayName="newSale">
+                  <button
+                    mat-icon-button
+                    type="button"
+                    (click)="decrementSale(i)"
+                  >
+                    <mat-icon>remove</mat-icon>
+                  </button>
+
+                  <input
+                    matInput
+                    class="quantity-input no-spinner no-outline"
+                    type="number"
+                    [formControlName]="i"
+                  />
+
+                  <button
+                    mat-icon-button
+                    type="button"
+                    (click)="incrementSale(i)"
+                  >
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </td>
+
+                <td>
+                  <button
+                    type="button"
+                    (click)="updatePrice(item, i)"
+                    class="btn-update"
+                  >
+                    Update
+                  </button>
+                </td>
+              </tr>
+            }
+          } @else {
+            <tr>
+              <td colspan="7">Loading prices...</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  </div>
+</form>
