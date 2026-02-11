@@ -156,7 +156,7 @@ decrement() {
       return;
     }
     const tradeRequest: TradeRequestDto = {
-      user_Id: this.userData ? this.userData.userId : 0,
+      user_Id: this.userData ? this.userData.user_Id : 0,
       productId: this.data.productId,
       quantity
     };

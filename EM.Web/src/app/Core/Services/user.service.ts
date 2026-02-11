@@ -4,7 +4,7 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { AuthService } from '@auth0/auth0-angular';
 
 export interface UserResponseDto {
-  userId: number;
+  user_Id: number;
   username: string;
   email: string;
   address: string;
