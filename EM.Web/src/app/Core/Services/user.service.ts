@@ -60,15 +60,12 @@ listUsers(): Observable<UserResponseDto[]> {
 createProfile(profile: CreateProfileDto) {
   return this.http.put<CreateProfileDto>(`${this.baseUrl}/admin/create-profile`, profile)
 }
+deleteProfile(id: number) {
+  return this.http.delete<number>(`${this.baseUrl}/admin/delete/${id}`)
+}
 }
 
 @Injectable({ providedIn: 'root' })
 export class DebugTokenService {
   constructor(private auth: AuthService) {}
-
-  logAccessToken() {
-    this.auth.getAccessTokenSilently().subscribe(token => {
-      console.log('ACCESS TOKEN:', token);
-    });
-  }
 }

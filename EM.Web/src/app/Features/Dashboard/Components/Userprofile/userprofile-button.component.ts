@@ -14,9 +14,4 @@ export class UserProfileButtonComponent {
   ChartRedirect() {
     this.router.navigate(['/profile']);
   }
-
-ngOnInit() {
-  this.debugToken.logAccessToken();
-
-}
 }

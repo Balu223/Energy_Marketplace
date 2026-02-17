@@ -47,5 +47,11 @@ namespace EM.API.Controllers
             var profile = await _userService.CreateUserAsync(dto);
             return NoContent();
         }
+        [HttpDelete("delete/{id}")]
+        public async Task<ActionResult> DeleteProfile( int id)
+        {
+            await _userService.DeleteUserAsync(id);
+            return Ok();
+        }
     }
 }
