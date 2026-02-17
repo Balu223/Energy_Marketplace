@@ -106,6 +106,16 @@ public async Task UpdateAuth0UserAsync(string auth0UserId, string? email, string
         var auth0UserId = doc.RootElement.GetProperty("user_id").GetString();
         return auth0UserId!;
     }
-    
+        public async Task DeleteAuth0UserAsync(string Auth0userId)
+        {
+            var token = await GetManagementTokenAsync();
+            var req = new HttpRequestMessage(HttpMethod.Delete,
+             $"https://{_domain}/api/v2/users/{Uri.EscapeDataString(Auth0userId)}");
+             req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _http.SendAsync(req);
+            response.EnsureSuccessStatusCode();
+        }
     }
+
 }

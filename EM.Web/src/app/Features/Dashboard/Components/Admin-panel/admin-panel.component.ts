@@ -178,7 +178,10 @@ toggleUsers() {
     }
 
   editUser(user: UserResponseDto) { console.log('Edit user', user); }
-  deleteUser(userId: number) { console.log('Delete user', userId); }
+  deleteUser(userid: number) 
+  {
+    this.userService.deleteProfile(userid).subscribe();
+  }
   deactivateUser(userId: number) { console.log('Deactivate user', userId); }
   createUser() { console.log('Create user'); }
 }

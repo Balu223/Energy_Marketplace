@@ -166,9 +166,7 @@ decrement() {
 
     this.tradeService.executeTrade(this.data.mode, tradeRequest).subscribe({
       next: () => {
-        // user kreditek frissítése
         this.userService.getMe().subscribe();
-
         this.showSuccess(`${this.data.mode === 'buy' ? 'Purchase' : 'Sale'} successful!`);
         this.dialogRef.close(true);
       },
