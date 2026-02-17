@@ -2,6 +2,7 @@ using System.Security.Claims;
 using EM.API.Models;
 using EM.API.Models.Enums;
 using EM.API.Repositories.Interfaces;
+using EM.API.Services.Interfaces;
 
 public class CurrentUserService : ICurrentUserService
 {
@@ -16,8 +17,7 @@ public class CurrentUserService : ICurrentUserService
 
     public async Task<User> GetCurrentUserAsync()
     {
-        var httpContext = _httpContextAccessor.HttpContext
-                         ?? throw new InvalidOperationException("No HttpContext");
+        var httpContext = _httpContextAccessor.HttpContext!;
 
         var principal = httpContext.User;
         var sub = principal.FindFirst("sub")?.Value
@@ -36,12 +36,12 @@ public class CurrentUserService : ICurrentUserService
                     ?? principal.FindFirst("email")?.Value
                     ?? principal.FindFirst("http://localhost:4200/email")?.Value;
 
-var username =
-    principal.FindFirst("http://localhost:4200/username")?.Value
-    ?? principal.FindFirst("name")?.Value
-    ?? principal.FindFirst("nickname")?.Value
-    ?? email
-    ?? sub;
+        var username =
+            principal.FindFirst("http://localhost:4200/username")?.Value
+            ?? principal.FindFirst("name")?.Value
+            ?? principal.FindFirst("nickname")?.Value
+            ?? email
+            ?? sub;
 
         var allRoleClaims = principal.Claims
         .Where(c =>

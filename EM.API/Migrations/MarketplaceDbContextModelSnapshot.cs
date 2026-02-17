@@ -263,7 +263,6 @@ namespace EM.API.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Auth0_Id")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
@@ -292,7 +291,7 @@ namespace EM.API.Migrations
 
                     b.HasKey("User_Id");
 
-                    b.HasIndex("Auth0_Id")
+                    b.HasIndex("User_Id")
                         .IsUnique();
 
                     b.ToTable("Users");

@@ -23,8 +23,10 @@ public class Repository<T> : IRepository<T> where T : class
         => await _dbSet.ToListAsync();
 
     public virtual async Task AddAsync(T entity)
-        => await _dbSet.AddAsync(entity);
-
+    {
+     await _dbSet.AddAsync(entity);
+        await _context.SaveChangesAsync();
+    }
     public virtual async Task UpdateAsync(T entity)
         { _dbSet.Update(entity);
             await _context.SaveChangesAsync();

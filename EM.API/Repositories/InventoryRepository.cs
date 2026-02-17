@@ -7,16 +7,17 @@ public class InventoryRepository : Repository<InventoryItem>, IInventoryReposito
 {
     public InventoryRepository(MarketplaceDbContext context) : base(context) { }
 
-    public async Task<IReadOnlyList<InventoryItem>> GetInventoryAsync()
+    public async Task<IReadOnlyList<InventoryItem>> GetInventoryAsync(int userId)
     {
         return await _context.InventoryItems
+            .Where(i => i.User_Id == userId)
             .Include(m => m.Product)
             .ToListAsync();
     }
-     public async Task<IReadOnlyList<InventoryItem>> GenerateMissingInventoryItems()
+     public async Task<IReadOnlyList<InventoryItem>> GenerateMissingInventoryItems(int UserId)
     {
         var products = await _context.Products.ToListAsync();
-        var existingInventoryItems = await _context.InventoryItems.Include(i => i.Product).ToListAsync();
+        var existingInventoryItems = await _context.InventoryItems.Where(i => i.User_Id == UserId).Include(i => i.Product).ToListAsync();
         var existingByProdId = existingInventoryItems.ToDictionary(i => i.Product_Id);
 
         var result = new List<InventoryItem>();

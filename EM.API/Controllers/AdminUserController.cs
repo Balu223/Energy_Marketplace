@@ -34,5 +34,18 @@ namespace EM.API.Controllers
             var updatedPrice = await _marketplaceService.UpdatePrice(priceDto);
             return Ok(updatedPrice);
         }
+        [HttpPut("update-profile")]
+        public async Task<ActionResult<UpdateProfileDto>> UpdateProfile([FromBody] UpdateProfileDto userDto)
+        {
+            int userId = userDto.User_Id;
+            var updatedPrice = await _userService.UpdateUserAsync(userId, userDto);
+            return Ok(updatedPrice);
+        }
+        [HttpPut("create-profile")]
+        public async Task<ActionResult> CreateProfile([FromBody] CreateUserDto dto)
+        {
+            var profile = await _userService.CreateUserAsync(dto);
+            return NoContent();
+        }
     }
 }

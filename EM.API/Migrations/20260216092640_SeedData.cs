@@ -40,7 +40,7 @@ namespace EM.API.Migrations
                 {
                     User_Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Auth0_Id = table.Column<string>(type: "text", nullable: false),
+                    Auth0_Id = table.Column<string>(type: "text", nullable: true),
                     Username = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<string>(type: "text", nullable: false),
@@ -211,9 +211,9 @@ namespace EM.API.Migrations
                 column: "User_Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_Auth0_Id",
+                name: "IX_Users_User_Id",
                 table: "Users",
-                column: "Auth0_Id",
+                column: "User_Id",
                 unique: true);
         }
 

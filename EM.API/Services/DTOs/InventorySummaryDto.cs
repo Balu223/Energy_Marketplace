@@ -4,6 +4,7 @@ namespace EM.API.Services.DTOs
 {
     public class InventorySummaryDto
     {
+        public int User_Id {get; set;}
         public int Product_Id { get; set; }
         public decimal Quantity { get; set; }
 
