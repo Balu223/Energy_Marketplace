@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AsyncPipe, JsonPipe, NgIf } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
@@ -19,6 +19,7 @@ import { InventoryService, InventorySummaryItem } from '../../../../Core/Service
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class UserInventoryComponent implements OnInit {
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   loading = true;
   error: string | null = null;
     
@@ -30,19 +31,34 @@ export class UserInventoryComponent implements OnInit {
 };
 
   barChartOptions: ChartConfiguration<'bar'>['options'] = {
-    responsive: true,
-    hoverBackgroundColor: '#ca566f',
-    indexAxis: 'y',
-    scales: {
-        x: {
-            min: 0,
-        }
+  responsive: true,
+  hoverBackgroundColor: '#ca566f',
+  indexAxis: 'y',
+  animation: {
+    duration: 500,          // hosszabb, simább animáció
+    easing: 'easeOutQuart', // kellemes görbe
+  },
+  // Ha szeretnél külön update animációt:
+  transitions: {
+    active: {
+      animation: {
+        duration: 500,
+        easing: 'easeOutQuart',
+      }
     }
-  };
+  },
+  scales: {
+    x: {
+      min: 0,
+      // max‑ot futás közben állítod, ahogy most
+    }
+  }
+};
 
   data$!: Observable<MarketplaceSummaryItem[]>;
   inventoryData$!: Observable<InventorySummaryItem[]>;
   private items: MarketplaceSummaryItem[] = [];
+  private currentXMax = 10;
 
   constructor(private marketplaceService: MarketplaceService, private inventoryService: InventoryService, private dialog: MatDialog, private userService: UserService) {}
 
@@ -51,57 +67,64 @@ export class UserInventoryComponent implements OnInit {
   }
 
   loadData(): void {
-    this.inventoryData$ = this.inventoryService
-      .getGenerateMissingInventoryItems()
-      .pipe(
-        tap(d => {
-          const sorted = [...d].sort((a, b) => a.product_Id - b.product_Id);
-          this.items = sorted;
+  this.inventoryData$ = this.inventoryService
+    .getGenerateMissingInventoryItems()
+    .pipe(
+      tap(d => {
+        const sorted = [...d].sort((a, b) => a.product_Id - b.product_Id);
+        this.items = sorted;
 
-          const labels = sorted.map(x => `${x.product_Name} (${x.unit.toString()})`);
-          const quantities = sorted.map(x => x.quantity);
+        const labels = sorted.map(x => `${x.product_Name} (${x.unit.toString()})`);
+        const quantities = sorted.map(x => x.quantity);
 
-          this.barChartData = {
-            labels,
-            datasets: [
-              {
-                data: quantities,
-                label: 'Inventory quantity',
-                backgroundColor: ['#45a5f5', '#66BB6A', '#FFA726']
-              }
-            ]
-          };
+        // 1) labels + data frissítése, ugyanazzal az objektummal
+        this.barChartData.labels = labels;
 
-          const maxqQuantity = quantities.length ? Math.max(...quantities) : 0;
-          const minMax = 10;
-          this.barChartOptions = {
-            responsive: true,
-            hoverBackgroundColor: '#ca566f',
-            indexAxis: 'y',
-            scales: {
-              x: {
-                min: 0,
-                max: Math.max(minMax, maxqQuantity + 5)
-              }
+        if (this.barChartData.datasets[0]) {
+          this.barChartData.datasets[0].data = quantities;
+          this.barChartData.datasets[0].label = 'Inventory quantity';
+          this.barChartData.datasets[0].backgroundColor = ['#45a5f5', '#66BB6A', '#FFA726'];
+        } else {
+          this.barChartData.datasets = [
+            {
+              data: quantities,
+              label: 'Inventory quantity',
+              backgroundColor: ['#45a5f5', '#66BB6A', '#FFA726']
             }
-          };
+          ];
+        }
 
-          this.loading = false;
-          this.error = null;
-        }),
-        catchError(err => {
-          console.error('API error:', err);
-          this.loading = false;
-          this.error = 'Error while fetching data.';
-          return of([] as InventorySummaryItem[]);
-        })
-      );
+        const maxQuantity = quantities.length ? Math.max(...quantities) : 0;
+const minMax = 10;
 
-    this.inventoryData$.subscribe();
-    this.data$ = this.marketplaceService
-      .getSummary();
+const opts = this.barChartOptions!;
+opts.scales = opts.scales || {};
+opts.scales['x'] = opts.scales['x'] || {};
+const xScale = opts.scales['x']!;
 
-  }
+// csak felfelé engedjük menni
+const targetMax = Math.max(minMax, maxQuantity + 5);
+this.currentXMax = Math.max(this.currentXMax, targetMax);
+(xScale as any).suggestedMin = 0;
+(xScale as any).suggestedMax = targetMax;
+
+        // 3) smooth update – NEM új chart, csak redraw az előző állapotról
+        this.chart?.update();
+
+        this.loading = false;
+        this.error = null;
+      }),
+      catchError(err => {
+        console.error('API error:', err);
+        this.loading = false;
+        this.error = 'Error while fetching data.';
+        return of([] as InventorySummaryItem[]);
+      })
+    );
+
+  this.inventoryData$.subscribe();
+  this.data$ = this.marketplaceService.getSummary();
+}
   onClick(item: InventorySummaryItem): void {
 
     this.openTradeSelect(item);
@@ -126,9 +149,10 @@ openTrade(event: any) {
   this.dialog.closeAll();
   this.dialog.open(TradeSelectDialogComponent, { position });
 }
-  openTradeSelect(item: InventorySummaryItem) {
+  openTradeSelect(item: MarketplaceSummaryItem) {
     const dialogRef = this.dialog.open(TradeSelectDialogComponent, {
-      data: item
+      data: item,
+      panelClass: 'trade-select-panel'
     });
 
     dialogRef.afterClosed().subscribe((result: boolean | undefined) => {

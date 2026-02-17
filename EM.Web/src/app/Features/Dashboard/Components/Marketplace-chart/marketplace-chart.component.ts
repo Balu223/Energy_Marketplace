@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AsyncPipe, JsonPipe, NgIf } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
@@ -18,6 +18,7 @@ import { UserResponseDto, UserService } from '../../../../Core/Services/user.ser
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class MarketplaceChartComponent implements OnInit {
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   loading = true;
   error: string | null = null;
 
@@ -43,41 +44,50 @@ export class MarketplaceChartComponent implements OnInit {
     this.loadData();
   }
 
-  loadData(): void {
-    this.data$ = this.marketplaceService
-      .getSummary()
-      .pipe(
-        tap(d => {
-          const sorted = [...d].sort((a, b) => a.product_Id - b.product_Id);
-          this.items = sorted;
+loadData(): void {
+  this.data$ = this.marketplaceService
+    .getSummary()
+    .pipe(
+      tap(d => {
+        const sorted = [...d].sort((a, b) => a.product_Id - b.product_Id);
+        this.items = sorted;
 
-          const labels = sorted.map(x => `${x.product_Name} (${x.unit.toString()})`);
-          const quantities = sorted.map(x => x.quantity);
+        const labels = sorted.map(x => `${x.product_Name} (${x.unit.toString()})`);
+        const quantities = sorted.map(x => x.quantity);
 
-          this.barChartData = {
-            labels,
-            datasets: [
-              {
-                data: quantities,
-                label: 'Marketplace quantity',
-                backgroundColor: ['#45a5f5', '#66BB6A', '#FFA726']
-              }
-            ]
-          };
+        // labels frissítés
+        this.barChartData.labels = labels;
 
-          this.loading = false;
-          this.error = null;
-        }),
-        catchError(err => {
-          console.error('API error:', err);
-          this.loading = false;
-          this.error = 'Error while fetching data.';
-          return of([] as MarketplaceSummaryItem[]);
-        })
-      );
+        // ha van már dataset, csak frissítjük
+        if (this.barChartData.datasets[0]) {
+          this.barChartData.datasets[0].data = quantities;
+          this.barChartData.datasets[0].label = 'Marketplace quantity';
+          this.barChartData.datasets[0].backgroundColor = ['#45a5f5', '#66BB6A', '#FFA726'];
+        } else {
+          // fallback, ha valamiért üres lenne
+          this.barChartData.datasets = [
+            {
+              data: quantities,
+              label: 'Marketplace quantity',
+              backgroundColor: ['#45a5f5', '#66BB6A', '#FFA726']
+            }
+          ];
+        }
 
-    this.data$.subscribe();
-  }
+        this.chart?.update();
+        this.loading = false;
+        this.error = null;
+      }),
+      catchError(err => {
+        console.error('API error:', err);
+        this.loading = false;
+        this.error = 'Error while fetching data.';
+        return of([] as MarketplaceSummaryItem[]);
+      })
+    );
+
+  this.data$.subscribe();
+}
   onClick(item: MarketplaceSummaryItem): void {
 
     this.openTradeSelect(item);
@@ -104,7 +114,8 @@ openTrade(event: any) {
 }
   openTradeSelect(item: MarketplaceSummaryItem) {
     const dialogRef = this.dialog.open(TradeSelectDialogComponent, {
-      data: item
+      data: item,
+      panelClass: 'trade-select-panel'
     });
 
     dialogRef.afterClosed().subscribe((result: boolean | undefined) => {

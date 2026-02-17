@@ -1,5 +1,6 @@
-<section class="marketplace-chart" >
-@if (inventoryData$ | async; as data) {
+<section class="marketplace-chart">
+  <div class="chart-wrapper">
+@if (data$ | async; as data) {
   <canvas baseChart (chartClick)="onChartClick($event.active)"
           [data]="barChartData"
           [options]="barChartOptions"
@@ -8,8 +9,11 @@
   </canvas>
 } 
    @else {
-      <div>Loading...</div>
+      <div class="chart-loading">Loading...</div>
+
 }
+</div>
+</section>
 <section class="show-prices">
   <h2>Current Market Prices</h2>
 

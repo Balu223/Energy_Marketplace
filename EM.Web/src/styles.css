@@ -5,6 +5,7 @@ html, body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #0e1117;
   color: #e5e5e5;
+  overflow-y: scroll;
 }
 
 /* APP WRAPPER */
@@ -13,6 +14,7 @@ html, body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px 16px 48px;
+  position: relative; 
 }
 
 /* HEADER */
@@ -125,11 +127,23 @@ button:active {
 /* SUMMARY / CHART OLDAL */
 
 .summary-container {
+  min-height: 300px; 
   margin-top: 16px;
   padding: 20px 20px 24px;
   border-radius: 16px;
   background: #161b22;
   border: 1px solid #30363d;
+}
+.chart-wrapper {
+  min-height: 300px;           /* kb. a chart magassága */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-loading {
+  color: #9ca3af;
+  font-size: 14px;
 }
 
 .summary-header {
@@ -229,7 +243,12 @@ canvas {
 .user-profile input[type="email"],
 .user-profile input[type="address"],
 .user-profile input[type="text"],
-.user-profile input[type="role"] {
+.user-profile input[type="role"],
+.edit-user-dialog input[type="email"],
+.edit-user-dialog input[type="address"],
+.edit-user-dialog input[type="role"],
+.edit-user-dialog input[type="text"],
+.edit-user-dialog input[type="number"] {
   width: 100%;
   box-sizing: border-box;
   padding: 10px 10px;
@@ -244,8 +263,13 @@ canvas {
 
 .user-profile input[type="email"]:focus,
 .user-profile input[type="address"]:focus,
-.user-profile input[type="text"]:focus
-.user-profile input[type="role"]:focus  {
+.user-profile input[type="text"]:focus,
+.user-profile input[type="role"]:focus,
+.edit-user-dialog input[type="email"]:focus,
+.edit-user-dialog input[type="address"]:focus,
+.edit-user-dialog input[type="role"]:focus,
+.edit-user-dialog input[type="text"]:focus,
+.edit-user-dialog input[type="number"]:focus  {
   outline: none;
   border-color: #58a6ff;
   box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.3);
@@ -415,6 +439,10 @@ canvas {
   }
 }
 .credits-card {
+  position: absolute;
+  top: 155px;           /* header alá belőve, igény szerint */
+  right: 16px;
+
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -424,8 +452,6 @@ canvas {
   border: 1px solid #30363d;
   color: #c9d1d9;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  float: right;
-  margin-top: -20px;
 }
 
 .credits-label {
@@ -443,33 +469,43 @@ canvas {
 
 .trade-dialog {
         padding: 20px;
-        background-color: rgb(59, 59, 59);
+        background-color: #161b22;
+        border: 1px solid #30363d;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-.trade-select-dialog {
-        width: 60px;
-        padding: 20px;
-        
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
+.trade-select-panel .mat-mdc-dialog-container {
+  background-color: #161b22;
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
 
-.trade-select-actions {
-  display: flex;
-  flex-direction: column; 
-  gap: 12px;           
-  padding: 16px 24px 24px;
-  background-color: rgb(59, 59, 59);
+  opacity: 0;
+  transform: scale(0.96);
+  transform-origin: center;
+  animation: dialog-fade-in 100ms ease-out forwards;
 }
 
+/* 2) BELSŐ GOMBOS DIV – NEM overlay, csak content */
+.trade-select-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Gombok maradhatnak így */
 .trade-select-button {
   width: 100%;
   text-transform: none;
   font-size: 15px;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+.trade-select-panel .mat-mdc-dialog-surface {
+  background-color: #161b22 !important;
+  box-shadow: none;              /* ha nem kell extra árnyék */
+  border : 1px solid #30363d;
 }
 
 .trade-buy.mat-mdc-raised-button:hover .mat-mdc-button-persistent-ripple::before{
@@ -509,11 +545,14 @@ canvas {
   background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
-.trade-dialog-panel .mat-mdc-dialog-container {
+
+.edit-user-dialog-panel .mat-mdc-dialog-container,
+.create-user-dialog-panel .mat-mdc-dialog-container{
   background-color: #171717;  
   border-radius: 16px;
   overflow: hidden;
   padding: 0;
+
 }
 .snackbar-success {
   background-color: #2e7d32;
@@ -776,3 +815,257 @@ canvas {
   border-right: 2px solid #30363d;   /* Current purchase/sale után elválasztó */
 }
 
+.quantity-input {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.edit-user-dialog,
+.create-user-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 24px 24px;
+  border-radius: 16px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  min-width: 560px;
+  max-width: 720px;
+  box-sizing: border-box;
+  color: #c9d1d9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Cím */
+.edit-user-dialog > h2,
+.create-user-dialog > h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+/* Layout a mezőknek */
+.edit-user-dialog .form-fields-wrapper,
+.create-user-dialog .form-fields-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-user-dialog .input-fields-container,
+.create-user-dialog .input-fields-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+/* Angular Material mezők teljes szélességre */
+.edit-user-dialog mat-form-field,
+.create-user-dialog mat-form-field {
+  width: 100%;
+}
+
+/* Gombok */
+.edit-user-dialog .buttons-container,
+.edit-user-dialog .buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.edit-user-dialog .buttons-container update-profile-button[mat-raised-button],
+.create-user-dialog .buttons-container
+ update-profile-button[mat-raised-button] {
+  min-width: 120px;
+  text-transform: none;
+  font-weight: 500;
+}
+
+/* Mobilon egy oszlopban a mezők */
+@media (max-width: 768px) {
+  .edit-user-dialog, 
+  .create-user-dialog {
+    padding: 16px 18px 20px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .edit-user-dialog .input-fields-container,
+  .create-user-dialog .input-fields-container{
+    grid-template-columns: 1fr;
+  }
+}
+.role-select-panel.mat-mdc-select-panel {
+  background-color: #1e1e2a;
+  color: #fff;
+  opacity: 0;
+  transform: scaleY(0.98);
+  transform-origin: top;
+  animation: role-panel-fade 120ms ease-out forwards;
+}
+
+/* Opciók */
+.role-select-panel .mat-mdc-option {
+  background-color: #1e1e2a;
+  color: #fff;
+}
+
+/* Hover + selected */
+.role-select-panel .mat-mdc-option:hover {
+  background-color: #34344a !important;
+}
+
+.role-select-panel .mat-mdc-option.mdc-list-item--selected {
+  background-color: #2c2c3a;
+}
+
+/* Saját fade-in animáció */
+@keyframes role-panel-fade {
+  from {
+    opacity: 0;
+    transform: scaleY(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+.disabled {
+  cursor: not-allowed;
+}
+/* Alap mat-hint stílus */
+.mat-mdc-form-field-hint {
+  font-size: 12px;
+  color: #9fa6b2;        /* halvány szürke */
+  font-style: italic;
+}
+
+/* Ha csak bizonyos hintre akarod: adj class-t a HTML-ben: <mat-hint class="danger-hint"> */
+.danger-hint {
+  color: #f97373;        /* pirosas */
+  font-weight: 500;
+}
+
+/* Ha több soros legyen és ne csússzon rá a következő fieldre: */
+.mat-mdc-form-field .mat-mdc-form-field-hint-wrapper {
+  position: static !important;
+}
+.password-hint {
+  font-size: 11px;
+  line-height: 1.3;
+  white-space: normal;
+}
+.trade-dialog-panel .mat-mdc-dialog-container {
+  background-color: #171717;
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+
+  opacity: 0;
+  transform: scale(0.96);
+  transform-origin: center;
+  animation: dialog-fade-in 100ms ease-out forwards;
+}
+
+/* Ha csak a belső surface-re kell valami */
+.trade-dialog-panel .mat-mdc-dialog-surface {
+  border-radius: 16px;
+}
+
+/* Fade-in keyframes */
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.users-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 10px 8px;              /* nagyobb padding */
+  margin: 4px -4px 8px;           /* kicsit kifut a szélekre */
+  border-radius: 10px;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.users-header:hover {
+  background-color: #11151b;
+  transform: translateY(-1px);
+}
+
+.users-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.users-toggle-icon {
+  font-size: 16px;                /* nagyobb nyíl */
+  color: #9ca3af;
+}
+.mat-select[aria-expanded="true"] .mat-select-arrow {
+  transform: rotate(180deg);
+  transition: transform 150ms ease;
+}
+
+.users-table-open {
+  overflow: hidden;
+  animation: usersTableSlideDown 200ms ease-out;
+}
+
+@keyframes usersTableSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Wrapper alapállapot: összehúzva */
+.users-wrapper {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: max-height 250ms ease, opacity 250ms ease, transform 250ms ease;
+}
+
+/* Nyitott állapot: kapjon elég nagy max-height-et */
+.users-wrapper-open {
+  max-height: 1000px; /* legyen nagyobb, mint a várható tartalom */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Záráskor vissza 0-ba – ugyanaz, mint alap, én külön class-t tartok, de elég az is, hogy ne legyen open */
+.users-wrapper-closing {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* Soronkénti beúszás NYITÁSKOR */
+.users-table tbody tr {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.users-wrapper-open .users-table tbody tr {
+  animation: userRowFadeIn 200ms ease-out forwards;
+  animation-delay: calc(var(--delay-ms) * 1ms);
+}
+
+@keyframes userRowFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

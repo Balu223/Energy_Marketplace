@@ -4,56 +4,65 @@
 
     <!-- Users -->
     <section class="users-section">
-      <h2>Users Management</h2>
+  <div class="users-header" (click)="toggleUsers()">
+    <h2>Users Management</h2>
+    <span class="users-toggle-icon">
+      {{ isUsersOpen ? '▲' : '▼' }}
+    </span>
+  </div>
+<div class="users-wrapper" [class.users-wrapper-open]="isUsersOpen && !isUsersClosing" [class.users-wrapper-closing]="isUsersClosing" *ngIf="isUsersOpen || isUsersClosing">
+  @if (isUsersOpen || isUsersClosing) {
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Role</th>
+          <th>Credits</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
-      <table class="users-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Role</th>
-            <th>Credits</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        @if (users$ | async; as users) {
-          <tbody>
-            @for (user of users; track user.user_Id) {
-              <tr>
-                <td>{{ user.user_Id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.address }}</td>
-                <td>{{ user.role }}</td>
-                <td>{{ user.credits }}</td>
-                <td>
-                  <button (click)="editUser(user)" class="btn-edit">Edit</button>
-                  <button (click)="deleteUser(user.user_Id)" class="btn-delete">
-                    Delete
-                  </button>
-                  <button (click)="deactivateUser(user.user_Id)" class="btn-delete">
-                    Deactivate
-                  </button>
-                </td>
-              </tr>
-            }
-          </tbody>
-        } @else {
-          <tbody>
-            <tr>
-              <td colspan="7">Loading users...</td>
+      @if (users$ | async; as users) {
+        <tbody>
+          @for (user of users; let i = $index; track user.user_Id) {
+            <tr [style.--delay-ms.ms]="(i+1) * 40">
+              <td>{{ user.user_Id }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.address }}</td>
+              <td>{{ user.role }}</td>
+              <td>{{ user.credits }}</td>
+              <td>
+                <button (click)="openUserEdit(user)" class="btn-edit">Edit</button>
+                <button (click)="deleteUser(user.user_Id)" class="btn-delete">
+                  Delete
+                </button>
+                <button (click)="deactivateUser(user.user_Id)" class="btn-delete">
+                  Deactivate
+                </button>
+              </td>
             </tr>
-          </tbody>
-        }
-      </table>
+          }
+        </tbody>
+      } @else {
+        <tbody>
+          <tr>
+            <td colspan="7">Loading users...</td>
+          </tr>
+        </tbody>
+      }
+    </table>
 
-      <button type="button" (click)="createUser()" class="btn-primary">
-        Add User
-      </button>
-    </section>
+
+    <button type="button" (click)="openUserCreate()" class="btn-primary">
+      Add User
+    </button>
+  }
+      </div>
+</section>
 
     <!-- Marketplace -->
     <section class="marketplace-section">

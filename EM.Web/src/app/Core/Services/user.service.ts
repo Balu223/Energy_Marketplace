@@ -11,6 +11,21 @@ export interface UserResponseDto {
   role: string;
   credits: number;
 }
+export interface UpdateProfileDto {
+  user_Id: number;
+  username: string;
+  email: string;
+  address: string;
+  role: string;
+  credits: number;
+}
+export interface CreateProfileDto {
+  username: string;
+  password: string;
+  email: string;
+  address: string;
+  role: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -38,6 +53,12 @@ get currentUser(): UserResponseDto | null {
 }
 listUsers(): Observable<UserResponseDto[]> {
   return this.http.get<UserResponseDto[]>(`${this.baseUrl}/admin/users`);
+}
+  updateProfile(profile: UpdateProfileDto) {
+    return this.http.put<UpdateProfileDto>(`${this.baseUrl}/admin/update-profile`, profile);
+}
+createProfile(profile: CreateProfileDto) {
+  return this.http.put<CreateProfileDto>(`${this.baseUrl}/admin/create-profile`, profile)
 }
 }
 

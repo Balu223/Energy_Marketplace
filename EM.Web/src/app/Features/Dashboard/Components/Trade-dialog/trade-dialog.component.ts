@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 import { TradeRequestDto, TradeService } from '../../../../Core/Services/trade.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule, MatIcon } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 export type TradeMode = 'buy' | 'sell';
 
@@ -42,7 +43,7 @@ export type TradeMode = 'buy' | 'sell';
   </div>
 
   <div class="price-info">
-    <p><strong>Price:</strong>{{ data.mode === 'buy' ? 'Buy' : 'Sell' }} {{ data[data.mode === 'buy' ? 'purchasePricePerUnit' : 'salePricePerUnit'] }} HUF / {{ data.unit }}</p>
+    <p><strong>Price:</strong> {{ data[data.mode === 'buy' ? 'purchasePricePerUnit' : 'salePricePerUnit'] }} HUF / {{ data.unit }}</p>
   </div>
 
   <div class="price-info">
@@ -58,6 +59,7 @@ export class TradeDialogComponent {
   form: FormGroup;
   userdata$!: Observable<UserResponseDto>;
   userData: UserResponseDto | null = null;
+  private router = inject(Router);
 
   constructor(
 
@@ -66,6 +68,7 @@ export class TradeDialogComponent {
     private tradeService: TradeService,              
     private dialogRef: MatDialogRef<TradeDialogComponent>,
     private snackbar: MatSnackBar,
+
 
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -130,7 +133,6 @@ decrement() {
 
   confirmTrade() {
     const quantity = this.form.get('quantity')?.value ?? 0;
-
     if (quantity <= 0) {
       this.showError('Quantity must be greater than zero.');
       return;
@@ -139,7 +141,8 @@ decrement() {
       this.showError('You do not have enough credits to complete this purchase.');
       return;
     }
-    if (quantity > this.data.availableQuantity / 4 && this.data.mode === 'buy') {
+    
+    if (quantity > this.data.availableQuantity / 4 && this.data.mode === 'buy' && !this.router.url.startsWith('/inventory')) {
       this.showError('You cannot trade more than a quarter of the available quantity.');
       return;
     }
