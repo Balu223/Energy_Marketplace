@@ -21,8 +21,7 @@ namespace EM.API.Models
         [Key]                       
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int User_Id { get; set; }
-        [Required]
-        public string Auth0_Id { get; set; } = null!;
+        public string? Auth0_Id { get; set; }
 
         [Required]
         public string Username { get; set; } = null!;

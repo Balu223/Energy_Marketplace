@@ -42,6 +42,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddDbContext<MarketplaceDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddHttpClient();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IMarketplaceRepository, MarketplaceRepository>();
 builder.Services.AddScoped<IMarketplaceService, MarketplaceService>();
@@ -53,6 +54,7 @@ builder.Services.AddScoped<ITradingService, TradingService>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IAuth0Service, Auth0Service>();
 
 
 

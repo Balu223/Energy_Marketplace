@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormArray,
@@ -15,12 +15,16 @@ import { AuthModule } from '@auth0/auth0-angular';
 import {
   UserResponseDto,
   UserService,
+  CreateProfileDto
 } from '../../../../Core/Services/user.service';
 import {
   MarketplaceService,
   MarketplaceSummaryItem
 } from '../../../../Core/Services/marketplace.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { EditUserDialogComponent } from '../Admin-panel-dialogs/edit-user-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateUserDialogComponent } from '../Admin-panel-dialogs/create-user.dialog.component';
 
 @Component({
   selector: 'admin-panel',
@@ -40,31 +44,40 @@ import { Observable } from 'rxjs';
 export class AdminPanelComponent implements OnInit {
   users$!: Observable<UserResponseDto[]>;
   items$!: Observable<MarketplaceSummaryItem[]>;
+  isUsersOpen = false;
+  isUsersClosing = false;
 
-  // mindig létező form
-  form!: FormGroup;
+
+
+  private fb = inject(FormBuilder)
+
+  form = this.fb.group({
+      username: new FormControl<string | null>({value: '', disabled: true}),
+      email: new FormControl<string | null>({value: '', disabled: true}),
+      address: new FormControl<string | null>(''),
+      role: new FormControl<string | null>({value: '', disabled: true}),
+      newPurchase: this.fb.array<FormControl<number | null>>([]),
+      newSale: this.fb.array<FormControl<number | null>>([]),
+    });
   adminService: any;
   constructor(
     private userService: UserService,
     private marketplaceService: MarketplaceService,
-    private fb: FormBuilder
+    private dialog: MatDialog
   ) {}
 
   get newPurchase() {
-    return this.form.get('newPurchase') as FormArray<FormControl<number | null>>;
+    return this.form.get('newPurchase') as unknown as FormArray<FormControl<number | null>>;
   }
 
   get newSale() {
-    return this.form.get('newSale') as FormArray<FormControl<number | null>>;
+    return this.form.get('newSale') as unknown as FormArray<FormControl<number | null>>;
   }
 
   ngOnInit(): void {
-    this.users$ = this.userService.listUsers();
+    this.users$ = this.userService.listUsers().pipe(map(users =>
+    [...users].sort((a, b) => a.user_Id - b.user_Id)));
     this.items$ = this.marketplaceService.getSummary();
-    this.form = this.fb.group({
-      newPurchase: this.fb.array<FormControl<number | null>>([]),
-      newSale: this.fb.array<FormControl<number | null>>([]),
-    });
 
     this.items$.subscribe((items) => {
       const purchaseControls = items.map((i) =>
@@ -83,8 +96,26 @@ export class AdminPanelComponent implements OnInit {
         this.fb.array(saleControls)
       );
     });
+    
   }
 
+
+toggleUsers() {
+  if (this.isUsersOpen) {
+    // 1) már nem "nyitott", de még látszik → closing állapot
+    this.isUsersOpen = false;
+    this.isUsersClosing = true;
+
+    // 2) megvárjuk, amíg a closing anim lefut, aztán eltüntetjük teljesen
+    setTimeout(() => {
+      this.isUsersClosing = false; // ekkor esik ki a DOM-ból az @if miatt
+    }, 250); // Ugyanannyi, mint a CSS animáció hossza
+  } else {
+    // nyitás
+    this.isUsersOpen = true;
+    this.isUsersClosing = false;
+  }
+}
   decrement(i: number) {
     const c = this.newPurchase.at(i);
     const current = c.value ?? 0;
@@ -118,8 +149,33 @@ export class AdminPanelComponent implements OnInit {
     };
     this.marketplaceService.UpdatePrice(updatedItem).subscribe(() => {
       console.log('Price updated successfully');
+    this.marketplaceService.getSummary();
     });
   }
+    openUserEdit(item: UserResponseDto) {
+      const dialogRef = this.dialog.open(EditUserDialogComponent, {
+        data: item,      panelClass: 'edit-user-dialog-panel'
+      },
+      );
+      dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.ngOnInit();
+
+        this.userService.getMe().subscribe();
+      }
+    });
+    }
+
+    openUserCreate() {
+      const dialogRef = this.dialog.open(CreateUserDialogComponent, {panelClass: 'create-user-dialog-panel'},);
+      dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.ngOnInit();
+
+        this.userService.getMe().subscribe();
+      }
+    });
+    }
 
   editUser(user: UserResponseDto) { console.log('Edit user', user); }
   deleteUser(userId: number) { console.log('Delete user', userId); }

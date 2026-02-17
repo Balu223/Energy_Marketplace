@@ -1,23 +1,49 @@
 using EM.API.Models;
+using EM.API.Models.Enums;
 using EM.API.Repositories;
 using EM.API.Repositories.Interfaces;
 using EM.API.Services.DTOs;
 using EM.API.Services.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 public class UserService : IUserService
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IUserRepository _userRepository;
+    private readonly IAuth0Service _auth0Service;
 
-    public UserService(ICurrentUserService currentUserService, IUserRepository userRepository)
+    public UserService(ICurrentUserService currentUserService, IUserRepository userRepository, IAuth0Service auth0Service)
     {
         _currentUserService = currentUserService;
         _userRepository = userRepository;
+        _auth0Service = auth0Service;
     }
-    public async Task<UserResponseDto?> CreateUserAsync(CreateUserDto userDto)
+public async Task<CreateUserDto> CreateUserAsync(CreateUserDto userDto)
+{
+    // 1) Auth0 user létrehozása
+    var auth0UserId = await _auth0Service.CreateAuth0UserAsync(userDto);
+
+    // 2) Local user entitás
+    var user = new User
     {
-      throw new NotImplementedException();
-    }
+        Username = userDto.Username,
+        Email = userDto.Email,
+        Address = userDto.address,
+        Role = userDto.Role ?? "User",
+        Auth0_Id = auth0UserId
+    };
+
+    await _userRepository.AddAsync(user);   // ebben legyen SaveChangesAsync
+
+    // 3) Visszatérő DTO (ha kell)
+    return new CreateUserDto
+    {
+        Username = user.Username,
+        Email = user.Email,
+        address = user.Address,
+        Role = user.Role,
+    };
+}
 
     public async Task<bool> DeactivateAsync(int userId)
     {
@@ -73,7 +99,17 @@ public class UserService : IUserService
     public async Task<UserProfileDto> UpdateCurrentProfileAsync(UpdateProfileDto dto)
     {
         var user = await _currentUserService.GetCurrentUserAsync();
-        return new UserProfileDto
+
+        if(!string.IsNullOrEmpty(user.Auth0_Id))
+        {
+            await _auth0Service.UpdateAuth0UserAsync(
+                user.Auth0_Id,
+                user.Email,
+                user.Username,
+                user.Role
+            );
+        }
+                return new UserProfileDto
         {
             UserId = user.User_Id,
             Username = user.Username,
@@ -101,6 +137,15 @@ public async Task<UserResponseDto?> UpdateUserAsync(int userId, UpdateProfileDto
 
     await _userRepository.UpdateAsync(user);
 
+    if(!string.IsNullOrEmpty(user.Auth0_Id))
+        {
+            await _auth0Service.UpdateAuth0UserAsync(
+                user.Auth0_Id,
+                user.Email,
+                user.Username,
+                user.Role
+            );
+        }
     return new UserResponseDto
     {
         User_Id = user.User_Id,

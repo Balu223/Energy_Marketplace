@@ -11,17 +11,22 @@ namespace EM.API.Services
 public class InventoryService : IInventoryService
 {
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly ICurrentUserService _currentUserService;
 
-    public InventoryService(IInventoryRepository inventoryRepository)
+    public InventoryService(IInventoryRepository inventoryRepository, ICurrentUserService currentUserService)
     {
         _inventoryRepository = inventoryRepository;
+        _currentUserService = currentUserService;
     }
 
         public async Task<IEnumerable<InventorySummaryDto>> GenerateMissingInventoryItemsAsync()
         {
-            var items = await _inventoryRepository.GenerateMissingInventoryItems();
+            var user = await _currentUserService.GetCurrentUserAsync();
+
+            var items = await _inventoryRepository.GenerateMissingInventoryItems(user.User_Id);
             return items.Select(m => new InventorySummaryDto
             {
+                User_Id = m.User_Id,
                 Product_Id = m.Product_Id,
                 Quantity = m.Quantity,
                 Product_Name = m.Product.Product_Name,
@@ -33,7 +38,8 @@ public class InventoryService : IInventoryService
 
         public async Task<IEnumerable<InventorySummaryDto>> GetInventoryAsync()
     {
-        var items = await _inventoryRepository.GetInventoryAsync();
+        var user = await _currentUserService.GetCurrentUserAsync();
+        var items = await _inventoryRepository.GetInventoryAsync(user.User_Id);
         
         return items.Select(m => new InventorySummaryDto
         {

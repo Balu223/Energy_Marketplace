@@ -24,10 +24,10 @@ export class UserProfileComponent implements OnInit {
   private fb = inject(FormBuilder)
 
     form = this.fb.group({
-      username: new FormControl<string | null>({value: '', disabled: true}),
+      username: new FormControl<string | null>(''),
       email: new FormControl<string | null>({value: '', disabled: true}),
       address: new FormControl<string | null>(''),
-      role: new FormControl<string | null>({value: '', disabled: true}),
+      role: new FormControl<string | null>(''),
     });
   
 
@@ -57,8 +57,11 @@ export class UserProfileComponent implements OnInit {
       role: this.form.value.role ?? '',
       credits: this.user?.credits ?? 0
     };
+
     this.userService.updateMyProfile(updatedProfile).subscribe(() => {
       console.log('Profile updated successfully');
+      this.auth.logout({logoutParams: {returnTo: window.location.origin}});
     });
+
   }
   }

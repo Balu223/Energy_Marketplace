@@ -4,7 +4,7 @@ namespace EM.API.Repositories.Interfaces
 {
 public interface IInventoryRepository : IRepository<InventoryItem>
 {
-   Task<IReadOnlyList<InventoryItem>> GetInventoryAsync();
-   Task<IReadOnlyList<InventoryItem>> GenerateMissingInventoryItems();
+   Task<IReadOnlyList<InventoryItem>> GetInventoryAsync(int userId);
+   Task<IReadOnlyList<InventoryItem>> GenerateMissingInventoryItems(int userId);
  } 
 }

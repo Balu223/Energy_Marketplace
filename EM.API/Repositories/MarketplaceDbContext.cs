@@ -23,7 +23,7 @@ namespace EM.API.Repositories
             
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasIndex(u => u.Auth0_Id).IsUnique();
+                entity.HasIndex(u => u.User_Id).IsUnique();
 
             });
 

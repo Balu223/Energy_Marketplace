@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EM.API.Migrations
 {
     [DbContext(typeof(MarketplaceDbContext))]
-    [Migration("20260211093011_SeedData")]
+    [Migration("20260216092640_SeedData")]
     partial class SeedData
     {
         /// <inheritdoc />
@@ -266,7 +266,6 @@ namespace EM.API.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Auth0_Id")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
@@ -295,7 +294,7 @@ namespace EM.API.Migrations
 
                     b.HasKey("User_Id");
 
-                    b.HasIndex("Auth0_Id")
+                    b.HasIndex("User_Id")
                         .IsUnique();
 
                     b.ToTable("Users");
