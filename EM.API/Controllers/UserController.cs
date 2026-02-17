@@ -86,6 +86,8 @@ namespace EM.API.Controllers
         public async Task<IActionResult> Me()
         {
             var user = await _currentUserService.GetCurrentUserAsync();
+            if (user is null || !user.IsActive)
+            return Forbid();
             var dto = new UserResponseDto{
                 User_Id = user.User_Id,
                 Username = user.Username,
