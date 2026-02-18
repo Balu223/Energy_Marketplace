@@ -1069,3 +1069,22 @@ canvas {
     transform: translateY(0);
   }
 }
+/* Inaktív sor alap szürkítés */
+.users-table tr.user-inactive {
+  opacity: 0.5;
+  color: #999;
+}
+
+/* Inaktív sorban az Activate gomb legyen normál fényes, más színnel */
+.users-table tr.user-inactive .btn-activate {
+  opacity: 1;
+  color: #fff;
+  background-color: #2e7d32; /* pl. zöld */
+  border-color: #2e7d32;
+}
+
+/* Ha kell, hogy a Deactivate/Delete gomb legyen szürkítve inaktívnál: */
+.users-table tr.user-inactive .btn-delete:not(.btn-activate),
+.users-table tr.user-inactive .btn-edit {
+  opacity: 0.5;
+}
