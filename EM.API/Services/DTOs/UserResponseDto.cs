@@ -11,5 +11,6 @@ namespace EM.API.Services.DTOs
         public string? Role { get; set; }
         public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
         public decimal? Credits { get; set; }
+        public bool IsActive {get; set;}
     }
 }

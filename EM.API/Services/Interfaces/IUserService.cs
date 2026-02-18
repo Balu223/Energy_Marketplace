@@ -13,6 +13,7 @@ namespace EM.API.Services.Interfaces
         Task<UserResponseDto?> UpdateUserAsync(int userId, UpdateProfileDto userDto);
         Task<bool> DeleteUserAsync(int userId);
         Task<bool> DeactivateAsync(int userId);
+        Task<bool> ActivateAsync(int userId);
         Task<UserResponseDto?> LoginUserAsync(LoginRequestDto loginRequest);
         Task<UserProfileDto> GetCurrentProfileAsync();
         Task<UserProfileDto> UpdateCurrentProfileAsync(UpdateProfileDto dto);

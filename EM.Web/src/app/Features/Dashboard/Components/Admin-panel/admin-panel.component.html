@@ -28,7 +28,7 @@
       @if (users$ | async; as users) {
         <tbody>
           @for (user of users; let i = $index; track user.user_Id) {
-            <tr [style.--delay-ms.ms]="(i+1) * 40">
+            <tr [style.--delay-ms.ms]="(i+1) * 40" [class.user-inactive]="!user.isActive">
               <td>{{ user.user_Id }}</td>
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
@@ -40,8 +40,8 @@
                 <button (click)="deleteUser(user.user_Id)" class="btn-delete">
                   Delete
                 </button>
-                <button (click)="deactivateUser(user.user_Id)" class="btn-delete">
-                  Deactivate
+                <button (click)="user.isActive ? deactivateUser(user.user_Id) : activateUser(user.user_Id)" class="btn-delete" [class.btn-activate]="!user.isActive">
+                  {{ user.isActive ? 'Deactivate' : 'Activate' }}
                 </button>
               </td>
             </tr>
