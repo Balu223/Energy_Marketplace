@@ -26,7 +26,8 @@ public class AdminService : IAdminService
                 Username = u.Username,
                 Email = u.Email,
                 Role = u.Role.ToString(),
-                Credits = u.Credits
+                Credits = u.Credits,
+                IsActive = u.IsActive
             }).ToList();
         }
     }

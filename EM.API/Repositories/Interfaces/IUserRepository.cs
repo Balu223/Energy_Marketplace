@@ -6,6 +6,7 @@ namespace EM.API.Repositories.Interfaces
     {
         Task<User?> GetUserByAuth0IdAsync(string auth0Id);
         Task<bool> DeactivateAsync(int userId);
+        Task<bool> ActivateAsync(int userId);
         Task<User?> LoginUserAsync(string username, string password);
 
     }

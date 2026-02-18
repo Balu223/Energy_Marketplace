@@ -28,6 +28,21 @@ namespace EM.API.Repositories
              return false;
          }
      }
+     public async Task<bool> ActivateAsync(int userId)
+     {
+         var user = _context.Set<User>().FirstOrDefault(x => x.User_Id == userId);
+         if (user != null)
+         {
+             user.IsActive = true;
+             _context.Set<User>().Update(user);
+             await _context.SaveChangesAsync();
+            return true;
+         }
+         else
+         {
+             return false;
+         }
+     }
     public async Task<User?> LoginUserAsync(string username, string password)
      {
          var user = _context.Set<User>().FirstOrDefault(x => x.Username == username);

@@ -10,6 +10,7 @@ export interface UserResponseDto {
   address: string;
   role: string;
   credits: number;
+  isActive: boolean;
 }
 export interface UpdateProfileDto {
   user_Id: number;
@@ -65,6 +66,9 @@ deleteProfile(id: number) {
 }
 deactivateProfile(id: number) {
   return this.http.patch<number>(`${this.baseUrl}/admin/deactivate/${id}`, id)
+}
+activateProfile(id: number) {
+  return this.http.patch<number>(`${this.baseUrl}/admin/activate/${id}`, id)
 }
 }
 

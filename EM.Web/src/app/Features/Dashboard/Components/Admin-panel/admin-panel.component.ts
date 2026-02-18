@@ -21,7 +21,7 @@ import {
   MarketplaceService,
   MarketplaceSummaryItem
 } from '../../../../Core/Services/marketplace.service';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { EditUserDialogComponent } from '../Admin-panel-dialogs/edit-user-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUserDialogComponent } from '../Admin-panel-dialogs/create-user.dialog.component';
@@ -42,7 +42,8 @@ import { CreateUserDialogComponent } from '../Admin-panel-dialogs/create-user.di
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class AdminPanelComponent implements OnInit {
-  users$!: Observable<UserResponseDto[]>;
+  private usersSubject = new BehaviorSubject<UserResponseDto[]>([]);
+  users$ = this.usersSubject.asObservable();
   items$!: Observable<MarketplaceSummaryItem[]>;
   isUsersOpen = false;
   isUsersClosing = false;
@@ -75,8 +76,7 @@ export class AdminPanelComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.users$ = this.userService.listUsers().pipe(map(users =>
-    [...users].sort((a, b) => a.user_Id - b.user_Id)));
+   this.loadUsers();
     this.items$ = this.marketplaceService.getSummary();
 
     this.items$.subscribe((items) => {
@@ -99,7 +99,13 @@ export class AdminPanelComponent implements OnInit {
     
   }
 
-
+loadUsers() {
+    this.userService.listUsers()
+      .pipe(
+        map(users => [...users].sort((a, b) => a.user_Id - b.user_Id))
+      )
+      .subscribe(users => this.usersSubject.next(users));
+}
 toggleUsers() {
   if (this.isUsersOpen) {
     // 1) már nem "nyitott", de még látszik → closing állapot
@@ -170,7 +176,7 @@ toggleUsers() {
       const dialogRef = this.dialog.open(CreateUserDialogComponent, {panelClass: 'create-user-dialog-panel'},);
       dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
       if (result) {
-        this.ngOnInit();
+        this.loadUsers();
 
         this.userService.getMe().subscribe();
       }
@@ -180,10 +186,22 @@ toggleUsers() {
   editUser(user: UserResponseDto) { console.log('Edit user', user); }
   deleteUser(userid: number) 
   {
-    this.userService.deleteProfile(userid).subscribe();
+    this.userService.deleteProfile(userid).subscribe(() => {
+      this.loadUsers();
+      this.userService.getMe().subscribe();
+    });
   }
   deactivateUser(userId: number) {
-    this.userService.deactivateProfile(userId).subscribe();
+    this.userService.deactivateProfile(userId).subscribe(() => {
+      this.loadUsers();
+      this.userService.getMe().subscribe();
+    });
+  }
+  activateUser(userId: number) {
+    this.userService.activateProfile(userId).subscribe(() => {
+      this.loadUsers();
+      this.userService.getMe().subscribe();
+    });
   }
   createUser() { console.log('Create user'); }
 }

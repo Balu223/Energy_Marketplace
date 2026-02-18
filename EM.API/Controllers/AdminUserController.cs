@@ -63,5 +63,15 @@ namespace EM.API.Controllers
             }
             return NoContent();
         }
+        [HttpPatch("activate/{userId}")]
+        public async Task<IActionResult> ActivateUser(int userId)
+        {
+            var success = await _userService.ActivateAsync(userId);
+            if (!success)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
     }
 }

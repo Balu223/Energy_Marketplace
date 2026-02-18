@@ -52,10 +52,11 @@ export class UserProfileComponent implements OnInit {
     const updatedProfile: UserResponseDto = {
       user_Id: this.user?.user_Id ?? 0,
       username: this.form.value.username ?? '',
-      email: this.form.value.email ?? '',
+      email: this.form.value.email!,
       address: this.form.value.address ?? '',
       role: this.form.value.role ?? '',
-      credits: this.user?.credits ?? 0
+      credits: this.user?.credits ?? 0,
+      isActive: this.user?.isActive ?? true
     };
 
     this.userService.updateMyProfile(updatedProfile).subscribe(() => {

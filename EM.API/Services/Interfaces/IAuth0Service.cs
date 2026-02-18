@@ -8,6 +8,7 @@ public interface IAuth0Service
     Task<string> CreateAuth0UserAsync(CreateUserDto userDto);
     Task DeleteAuth0UserAsync(string auth0Id);
     Task DeactivateAuth0UserAsync(string auth0Id);
+    Task ActivateAuth0UserAsync(string auth0Id);
 
 }
 }

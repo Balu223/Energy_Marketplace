@@ -59,6 +59,20 @@ public async Task<CreateUserDto> CreateUserAsync(CreateUserDto userDto)
         }
         return true;
     }
+        public async Task<bool> ActivateAsync(int userId)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user is null)
+        {
+            return false;
+        }
+        await _userRepository.ActivateAsync(user.User_Id);
+        if(!string.IsNullOrEmpty(user.Auth0_Id))
+        {
+            await _auth0Service.ActivateAuth0UserAsync(user.Auth0_Id);
+        }
+        return true;
+    }
 
     public async Task<bool> DeleteUserAsync(int userId)
     {
@@ -84,7 +98,8 @@ public async Task<CreateUserDto> CreateUserAsync(CreateUserDto userDto)
             Username = u.Username,
             Email = u.Email,
             Role = u.Role.ToString(),
-            Credits = u.Credits
+            Credits = u.Credits,
+            IsActive = u.IsActive
         }).ToList();
     }
 

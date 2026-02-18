@@ -138,6 +138,28 @@ public async Task UpdateAuth0UserAsync(string auth0UserId, string? email, string
             resp.EnsureSuccessStatusCode();
 
         }
+        public async Task ActivateAuth0UserAsync(string Auth0Id)
+        {
+            var token = await GetManagementTokenAsync();
+            var request = new
+            {
+                app_metadata = new
+                {
+                    isActive = true
+                }
+            };
+            var req = new HttpRequestMessage(HttpMethod.Patch,
+            $"https://{_domain}/api/v2/users/{Uri.EscapeDataString(Auth0Id)}")
+            {
+            Content = JsonContent.Create(request)
+            };
+
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var resp = await _http.SendAsync(req);
+            resp.EnsureSuccessStatusCode();
+
+        }
     }
 
 }
