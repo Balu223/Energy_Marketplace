@@ -72,7 +72,7 @@ namespace EM.API.Controllers
             }
             return Ok(result);
         }
-        [HttpPost("deactivate/{userId}")]
+        [HttpPatch("deactivate")]
         public async Task<IActionResult> DeactivateUser(int userId)
         {
             var success = await _userService.DeactivateAsync(userId);

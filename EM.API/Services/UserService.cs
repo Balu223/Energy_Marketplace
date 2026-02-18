@@ -47,7 +47,17 @@ public async Task<CreateUserDto> CreateUserAsync(CreateUserDto userDto)
 
     public async Task<bool> DeactivateAsync(int userId)
     {
-        throw new NotImplementedException();
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user is null)
+        {
+            return false;
+        }
+        await _userRepository.DeactivateAsync(user.User_Id);
+        if(!string.IsNullOrEmpty(user.Auth0_Id))
+        {
+            await _auth0Service.DeactivateAuth0UserAsync(user.Auth0_Id);
+        }
+        return true;
     }
 
     public async Task<bool> DeleteUserAsync(int userId)

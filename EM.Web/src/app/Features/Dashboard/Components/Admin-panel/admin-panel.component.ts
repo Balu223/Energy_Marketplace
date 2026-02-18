@@ -182,6 +182,8 @@ toggleUsers() {
   {
     this.userService.deleteProfile(userid).subscribe();
   }
-  deactivateUser(userId: number) { console.log('Deactivate user', userId); }
+  deactivateUser(userId: number) {
+    this.userService.deactivateProfile(userId).subscribe();
+  }
   createUser() { console.log('Create user'); }
 }

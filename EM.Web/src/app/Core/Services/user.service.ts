@@ -63,6 +63,9 @@ createProfile(profile: CreateProfileDto) {
 deleteProfile(id: number) {
   return this.http.delete<number>(`${this.baseUrl}/admin/delete/${id}`)
 }
+deactivateProfile(id: number) {
+  return this.http.patch<number>(`${this.baseUrl}/admin/deactivate/${id}`, id)
+}
 }
 
 @Injectable({ providedIn: 'root' })
