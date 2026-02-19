@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EM.API.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "User,Broker,Admin")]
     [Route("api/[controller]")]
     public class MarketplaceController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace EM.API.Controllers
         }
 
         [HttpGet("summary")]
-        [Authorize]
+        [Authorize(Roles = "User,Broker,Admin")]
         [ProducesResponseType(typeof(IEnumerable<MarketplaceSummaryDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<MarketplaceSummaryDto>>> GetSummary()
         {

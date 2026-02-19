@@ -2,6 +2,7 @@ using EM.API.Models;
 using EM.API.Repositories.Interfaces;
 using EM.API.Services.DTOs;
 using EM.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EM.API.Controllers
@@ -9,6 +10,7 @@ namespace EM.API.Controllers
 
 
     [Controller]
+    [Authorize(Roles = "User,Broker,Admin")]
     [Route("api/[controller]")]
     public class TradeController : ControllerBase
     {

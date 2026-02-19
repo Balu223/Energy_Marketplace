@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace EM.API.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "User,Broker,Admin")]
     [Route("api/[controller]")]
-    [Authorize]
+
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -42,37 +43,11 @@ namespace EM.API.Controllers
             return CreatedAtAction(nameof(GetUserById), new { userId = result.User_Id }, result);
         }
 */
-        [HttpPut("{userId:int}")]
-        public async Task<ActionResult<UserResponseDto>> UpdateUser(int userId, [FromBody] UpdateProfileDto userDto)
-        {
-            var result = await _userService.UpdateUserAsync(userId, userDto);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
-        }
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUser(int userId)
-        {
-            var success = await _userService.DeleteUserAsync(userId);
-            if (!success)
-            {
-                return NotFound();
-            }
-            return NoContent();
-        }
-        [HttpPost("login")]
-        public async Task<ActionResult<UserResponseDto>> LoginUser([FromBody] LoginRequestDto loginRequest)
-        {
-            var result = await _userService.LoginUserAsync(loginRequest);
-            if (result == null)
-            {
-                return Unauthorized("Invalid username or password.");
-            }
-            return Ok(result);
-        }
+        
+        
+       
         [HttpPatch("deactivate")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeactivateUser(int userId)
         {
             var success = await _userService.DeactivateAsync(userId);
@@ -83,6 +58,7 @@ namespace EM.API.Controllers
             return NoContent();
         }
         [HttpGet("me")]
+        [Authorize(Roles = "User,Broker,Admin")]
         public async Task<IActionResult> Me()
         {
             var user = await _currentUserService.GetCurrentUserAsync();
@@ -100,6 +76,7 @@ namespace EM.API.Controllers
             return Ok(dto);
         }
         [HttpPut("me")]
+        [Authorize(Roles = "User,Broker,Admin")]
         public async Task<ActionResult<UserResponseDto>> UpdateMe(
             [FromBody] UpdateProfileDto userDto,
             [FromServices] ICurrentUserService currentUserService,

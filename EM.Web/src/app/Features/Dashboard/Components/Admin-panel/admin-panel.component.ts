@@ -45,6 +45,7 @@ export class AdminPanelComponent implements OnInit {
   private usersSubject = new BehaviorSubject<UserResponseDto[]>([]);
   users$ = this.usersSubject.asObservable();
   items$!: Observable<MarketplaceSummaryItem[]>;
+  currentUser$!: Observable<UserResponseDto>;
   isUsersOpen = false;
   isUsersClosing = false;
 
@@ -61,6 +62,7 @@ export class AdminPanelComponent implements OnInit {
       newSale: this.fb.array<FormControl<number | null>>([]),
     });
   adminService: any;
+
   constructor(
     private userService: UserService,
     private marketplaceService: MarketplaceService,
@@ -78,7 +80,7 @@ export class AdminPanelComponent implements OnInit {
   ngOnInit(): void {
    this.loadUsers();
     this.items$ = this.marketplaceService.getSummary();
-
+    this.currentUser$ = this.userService.getMe();
     this.items$.subscribe((items) => {
       const purchaseControls = items.map((i) =>
         this.fb.control(i.purchase_Price_Per_Unit ?? 0)
@@ -165,7 +167,7 @@ toggleUsers() {
       );
       dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
       if (result) {
-        this.ngOnInit();
+        this.loadUsers();
 
         this.userService.getMe().subscribe();
       }

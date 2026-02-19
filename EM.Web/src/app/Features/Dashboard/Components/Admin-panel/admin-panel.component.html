@@ -12,38 +12,43 @@
   </div>
 <div class="users-wrapper" [class.users-wrapper-open]="isUsersOpen && !isUsersClosing" [class.users-wrapper-closing]="isUsersClosing" *ngIf="isUsersOpen || isUsersClosing">
   @if (isUsersOpen || isUsersClosing) {
+    <div *ngIf="currentUser$ | async as me">
     <table class="users-table">
       <thead>
         <tr>
-          <th>ID</th>
+          <th *ngIf="me.role === 'Admin'">ID</th>
           <th>Name</th>
           <th>Email</th>
-          <th>Address</th>
-          <th>Role</th>
+          <th *ngIf="me.role === 'Admin'">Address</th>
+          <th *ngIf="me.role === 'Admin'">Role</th>
           <th>Credits</th>
-          <th>Actions</th>
+          <th *ngIf="me.role === 'Admin'">Actions</th>
         </tr>
       </thead>
 
-      @if (users$ | async; as users) {
+      @if (users$ | async; as users;) {
         <tbody>
           @for (user of users; let i = $index; track user.user_Id) {
             <tr [style.--delay-ms.ms]="(i+1) * 40" [class.user-inactive]="!user.isActive">
-              <td>{{ user.user_Id }}</td>
+              <td *ngIf="me.role === 'Admin'">{{ user.user_Id }}</td>
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
-              <td>{{ user.address }}</td>
-              <td>{{ user.role }}</td>
+              <td *ngIf="me.role === 'Admin'">{{ user.address }}</td>
+              <td *ngIf="me.role === 'Admin'">{{ user.role }}</td>
               <td>{{ user.credits }}</td>
-              <td>
-                <button (click)="openUserEdit(user)" class="btn-edit">Edit</button>
+
+              <td *ngIf="me.role === 'Admin'">
+                
+                <button   (click)="openUserEdit(user)" class="btn-edit">Edit</button>
                 <button (click)="deleteUser(user.user_Id)" class="btn-delete">
                   Delete
                 </button>
                 <button (click)="user.isActive ? deactivateUser(user.user_Id) : activateUser(user.user_Id)" class="btn-delete" [class.btn-activate]="!user.isActive">
                   {{ user.isActive ? 'Deactivate' : 'Activate' }}
                 </button>
+
               </td>
+
             </tr>
           }
         </tbody>
@@ -54,7 +59,9 @@
           </tr>
         </tbody>
       }
+
     </table>
+    </div>
 
 
     <button type="button" (click)="openUserCreate()" class="btn-primary">
