@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EM.API.Controllers
 {
     [Controller]
+    [Authorize(Roles = "User,Broker,Admin")]
     [Route("api/[controller]")]
     public class InventoryController : ControllerBase
     {
@@ -17,7 +18,7 @@ namespace EM.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User,Broker,Admin")]
         [ProducesResponseType(typeof(IEnumerable<InventorySummaryDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<InventorySummaryDto>>> GetInventory()
         {
@@ -25,7 +26,7 @@ namespace EM.API.Controllers
             return Ok(result);
         }
         [HttpGet("generate-missing")]
-        [Authorize]
+        [Authorize(Roles = "User,Broker,Admin")]
         [ProducesResponseType(typeof(IEnumerable<InventorySummaryDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<InventorySummaryDto>>> GenerateMissingInventoryItems()
         {
