@@ -37,7 +37,7 @@ import { AdminPanelButtonComponent } from './Features/Dashboard/Components/Admin
       class="em-logo"
     />
     <h1 class="app-title"></h1>
-    @if (auth.isAuthenticated$ | async) {
+    @if ((auth.isAuthenticated$ | async) && (userdata$ | async)?.role != "User")   {
       <admin-panel-button class="admin-btn"></admin-panel-button>
     }
   </div>
