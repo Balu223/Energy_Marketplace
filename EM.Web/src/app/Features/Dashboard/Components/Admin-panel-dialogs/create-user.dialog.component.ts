@@ -16,6 +16,7 @@ import { UpdateProfileButtonComponent } from "../Userprofile/updateprofile-butto
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { AuthService } from "@auth0/auth0-angular";
 import { AdminService } from "../../../../Core/Services/admin.service";
+import { ConfirmDialogService } from "../../../../Core/Services/confirm.service";
 
 @Component({
   selector: 'create-user-dialog',
@@ -89,12 +90,20 @@ if (this.form.invalid) return;
         address: this.form.value.address ?? '',
         role: this.form.value.role ?? '',
     };
-
+    this.confirmDialog.confirm({
+      title: 'Are you sure?',
+      message: 'Do you want to create a new user?',
+      confirmLabel: 'Create',
+      cancelLabel: 'Cancel'
+    
+  }, {panelClass: 'confirm-dialog-panel'}).subscribe((confirmed: any) => {
+    if (confirmed) {
     this.userService.createProfile(profile).subscribe(() => {
       console.log('Profile created successfully');
       this.dialogRef.close(true);
       this.adminService.getUsers();
     });
+     }});
 }
   form!: FormGroup;
   userdata$!: Observable<UserResponseDto>;
@@ -110,6 +119,7 @@ if (this.form.invalid) return;
     private snackbar: MatSnackBar,
     private auth: AuthService,
     private adminService: AdminService,
+    private confirmDialog: ConfirmDialogService,
 
 
     @Inject(MAT_DIALOG_DATA)

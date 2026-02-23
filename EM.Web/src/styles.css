@@ -50,7 +50,7 @@ html, body {
 
 button {
   border: none;
-  border-radius: 999px;
+  border-radius: 999px !important;
   padding: 8px 16px;
   font-size: 14px;
   font-weight: 500;
@@ -59,7 +59,16 @@ button {
   color: #fff;
   transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
+.confirm-dialog-panel .mat-mdc-raised-button .mat-mdc-button-persistent-ripple::before,
+.confirm-dialog-panel .mat-mdc-raised-button .mat-mdc-button-ripple::before {
+  background-color: transparent !important;
+}
 
+/* 2) Írd felül konkrétan a DELETE és CANCEL hover háttérszínét: */
+.confirm-dialog-panel .mat-mdc-raised-button.confirm-cancel:hover .mdc-button__ripple,
+.confirm-dialog-panel .mat-mdc-raised-button.confirm:hover .mdc-button__ripple {
+  background-color: #ff7a3c !important;
+}
 button:hover {
   background: #ff7a3c;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
@@ -1278,4 +1287,46 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.confirm-dialog-panel .mat-mdc-dialog-container {
+  background-color: #161b22;
+  border-radius: 16px;
+  border : 1px solid #30363d;
+  padding: 0;            /* fontos: default padding ki */
+  overflow: hidden;
+}
+
+.confirm-dialog {
+  padding: 16px 20px 14px;
+  background-color: #161b22;
+}
+
+
+.confirm-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #e6edf3;
+}
+
+.confirm-message {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: #8b949e;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.confirm-actions button {
+  text-transform: none;
+}
+.confirm-dialog .mat-mdc-dialog-container {
+    background-color: #161b22 !important;
+  box-shadow: none;              /* ha nem kell extra árnyék */
+  border : 1px solid #30363d;
 }
