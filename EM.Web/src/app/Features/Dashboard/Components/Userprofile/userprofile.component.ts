@@ -11,6 +11,9 @@ import { UserProfileDto } from "../../../../Models/userprofile.dto";
 import { AuthModule, AuthService } from "@auth0/auth0-angular";
 import { UserResponseDto, UserService } from "../../../../Core/Services/user.service";
 import { UpdateProfileButtonComponent } from "./updateprofile-button.component";
+import { ConfirmDialogService } from "../../../../Core/Services/confirm.service";
+import { MatDialogRef } from "@angular/material/dialog";
+import { EditUserDialogComponent } from "../Admin-panel-dialogs/edit-user-dialog.component";
 
 @Component({  selector: 'user-profile',
   standalone: true,
@@ -31,7 +34,7 @@ export class UserProfileComponent implements OnInit {
     });
   
 
-  constructor(private auth: AuthService, private userService: UserService) {}
+  constructor(private auth: AuthService, private userService: UserService, private confirmDialog: ConfirmDialogService) {}
 
   ngOnInit(): void {
     this.userService.getMe().subscribe(user => {
@@ -58,11 +61,20 @@ export class UserProfileComponent implements OnInit {
       credits: this.user?.credits ?? 0,
       isActive: this.user?.isActive ?? true
     };
-
+    this.confirmDialog.confirm({
+    title: 'Are you sure?',
+    message: 'Do you want to edit your profile?',
+    confirmLabel: 'Edit',
+    cancelLabel: 'Cancel'
+  }, { panelClass: 'confirm-dialog-panel' })
+    .subscribe(confirmed => {
+      if (!confirmed) return;
     this.userService.updateMyProfile(updatedProfile).subscribe(() => {
       console.log('Profile updated successfully');
       this.auth.logout({logoutParams: {returnTo: window.location.origin}});
+      
     });
+  });
 
   }
   }

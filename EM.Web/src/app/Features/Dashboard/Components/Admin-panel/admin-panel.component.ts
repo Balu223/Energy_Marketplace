@@ -25,6 +25,8 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 import { EditUserDialogComponent } from '../Admin-panel-dialogs/edit-user-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUserDialogComponent } from '../Admin-panel-dialogs/create-user.dialog.component';
+import { ConfirmDialogComponent } from '../Confirm-dialog/confirm-dialog';
+import { ConfirmDialogService } from '../../../../Core/Services/confirm.service';
 
 @Component({
   selector: 'admin-panel',
@@ -66,7 +68,8 @@ export class AdminPanelComponent implements OnInit {
   constructor(
     private userService: UserService,
     private marketplaceService: MarketplaceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private confirmDialog: ConfirmDialogService
   ) {}
 
   get newPurchase() {
@@ -147,6 +150,14 @@ toggleUsers() {
   }
 
   updatePrice(item: MarketplaceSummaryItem, index: number) {
+    this.confirmDialog.confirm({
+    title: 'Are you sure?',
+    message: 'You are about to update a marketplace items price globally.',
+    confirmLabel: 'Update',
+    cancelLabel: 'Cancel'
+    
+  }, {panelClass: 'confirm-dialog-panel'}).subscribe((confirmed: any) => {
+    if (confirmed) {
     const purchase = this.newPurchase.at(index).value;
     const sale = this.newSale.at(index).value;
     if (purchase == null || sale == null) return;
@@ -159,6 +170,8 @@ toggleUsers() {
       console.log('Price updated successfully');
     this.marketplaceService.getSummary();
     });
+  }
+     });
   }
     openUserEdit(item: UserResponseDto) {
       const dialogRef = this.dialog.open(EditUserDialogComponent, {
@@ -188,22 +201,51 @@ toggleUsers() {
   editUser(user: UserResponseDto) { console.log('Edit user', user); }
   deleteUser(userid: number) 
   {
+    this.confirmDialog.confirm({
+    title: 'Are you sure?',
+    message: 'You are about to PERMANENTLY DELETE this user.',
+    confirmLabel: 'DELETE',
+    cancelLabel: 'Cancel'
+  }, { panelClass: 'confirm-dialog-panel' })
+    .subscribe(confirmed => {
+      if (!confirmed) return;
     this.userService.deleteProfile(userid).subscribe(() => {
       this.loadUsers();
       this.userService.getMe().subscribe();
     });
+  });
   }
-  deactivateUser(userId: number) {
-    this.userService.deactivateProfile(userId).subscribe(() => {
-      this.loadUsers();
-      this.userService.getMe().subscribe();
+deactivateUser(userId: number) {
+  this.confirmDialog.confirm({
+    title: 'Are you sure?',
+    message: 'You are about to deactivate this user.',
+    confirmLabel: 'Deactivate',
+    cancelLabel: 'Cancel'
+  }, { panelClass: 'confirm-dialog-panel' })
+    .subscribe(confirmed => {
+      if (!confirmed) return;
+
+      this.userService.deactivateProfile(userId).subscribe(() => {
+        this.loadUsers();
+        this.userService.getMe().subscribe();
+      });
     });
-  }
+}
   activateUser(userId: number) {
+    this.confirmDialog.confirm({
+    title: 'Are you sure?',
+    message: 'You are about to activate this user.',
+    confirmLabel: 'Activate',
+    cancelLabel: 'Cancel'
+  }, { panelClass: 'confirm-dialog-panel' })
+    .subscribe(confirmed => {
+      if (!confirmed) return;
     this.userService.activateProfile(userId).subscribe(() => {
       this.loadUsers();
       this.userService.getMe().subscribe();
     });
+  });
   }
-  createUser() { console.log('Create user'); }
 }
+export { ConfirmDialogComponent };
+

@@ -14,6 +14,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DialogRef } from '@angular/cdk/dialog';
 import { Observable } from 'rxjs';
+import { ConfirmDialogService } from '../../../../Core/Services/confirm.service';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class BuyCreditsDialogComponent implements AfterViewInit {
   user: UserResponseDto | null = null;
   user$: Observable<UserResponseDto>;
 
-  constructor(private stripeService: StripeService, private userService: UserService,private fb: FormBuilder, private dialogRef: MatDialogRef<BuyCreditsDialogComponent>, private snackbar: MatSnackBar, private cdr: ChangeDetectorRef, @Inject(MAT_DIALOG_DATA) public data: {credits: number}
+  constructor(private stripeService: StripeService, private confirmDialog: ConfirmDialogService, private userService: UserService,private fb: FormBuilder, private dialogRef: MatDialogRef<BuyCreditsDialogComponent>, private snackbar: MatSnackBar, private cdr: ChangeDetectorRef, @Inject(MAT_DIALOG_DATA) public data: {credits: number}
   ){
       this.form = this.fb.group({
       credits: this.data.credits ?? 0
@@ -74,7 +75,14 @@ export class BuyCreditsDialogComponent implements AfterViewInit {
     this.isProcessing = false;
     return;
   }
-
+this.confirmDialog.confirm({
+      title: 'Are you sure?',
+      message: `Do you want to get ${credits} credits for ${credits} HUF?`,
+      confirmLabel: 'Purchase',
+      cancelLabel: 'Cancel'
+    
+  }, {panelClass: 'confirm-dialog-panel'}).subscribe((confirmed: any) => {
+    if (confirmed) { 
   this.stripeService.createPaymentIntent(credits).subscribe(async (res) => {
     const stripe = this.stripeService.getStripe();
 
@@ -103,6 +111,7 @@ export class BuyCreditsDialogComponent implements AfterViewInit {
           role: this.user!.role,
           isActive: this.user!.isActive
         };
+        
         this.userService.updateMyProfile(updateProfileRequest).subscribe({
           next: () => {
           this.userService.getMe().subscribe();
@@ -119,6 +128,10 @@ export class BuyCreditsDialogComponent implements AfterViewInit {
       this.cdr.detectChanges();
     }
   });
+} else {
+  this.isProcessing = false;
+  this.cdr.detectChanges();
+}});
 }
   private showSuccess(message: string) {
     this.snackbar.open(message, 'Close', {

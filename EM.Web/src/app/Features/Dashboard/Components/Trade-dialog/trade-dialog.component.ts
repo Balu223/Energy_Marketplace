@@ -12,6 +12,7 @@ import { TradeRequestDto, TradeService } from '../../../../Core/Services/trade.s
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule, MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { ConfirmDialogService } from '../../../../Core/Services/confirm.service';
 
 export type TradeMode = 'buy' | 'sell';
 
@@ -68,6 +69,7 @@ export class TradeDialogComponent {
     private tradeService: TradeService,              
     private dialogRef: MatDialogRef<TradeDialogComponent>,
     private snackbar: MatSnackBar,
+    private confirmDialog: ConfirmDialogService,
 
 
     @Inject(MAT_DIALOG_DATA)
@@ -163,7 +165,14 @@ decrement() {
       productId: this.data.productId,
       quantity
     };
-
+    this.confirmDialog.confirm({
+      title: 'Are you sure?',
+      message: `Do you want to ${this.data.mode === 'buy' ? 'purchase' : 'sell'} ${this.form.get('quantity')?.value} ${this.data.unit} of ${this.data.productName} for ${this.totalPrice} HUF? `,
+      confirmLabel: `${this.data.mode === 'buy' ? 'Purchase' : 'Sell'}`,
+      cancelLabel: 'Cancel'
+    
+  }, {panelClass: 'confirm-dialog-panel'}).subscribe((confirmed: any) => {
+    if (confirmed) { 
     this.tradeService.executeTrade(this.data.mode, tradeRequest).subscribe({
       next: () => {
         this.userService.getMe().subscribe();
@@ -174,6 +183,7 @@ decrement() {
         this.showError(`Error executing ${this.data.mode === 'buy' ? 'purchase' : 'sale'}: ${error.message}`);
       }
     });
+  }});
   }
 }
 

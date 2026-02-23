@@ -15,13 +15,14 @@ import { MatOption, MatSelectModule } from "@angular/material/select";
 import { UpdateProfileButtonComponent } from "../Userprofile/updateprofile-button.component";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { AuthService } from "@auth0/auth0-angular";
+import { ConfirmDialogService } from "../../../../Core/Services/confirm.service";
 
 @Component({
   selector: 'edit-user-dialog',
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatSelectModule, MatFormFieldModule, MatButtonModule, MatFormField, MatInputModule, ReactiveFormsModule, MatSnackBarModule, MatOption, UpdateProfileButtonComponent],
   template: `
-  <form [formGroup]="form" class="edit-user-dialog" (ngSubmit)="onSave()" ng-model="true">
+  <form [formGroup]="form" class="edit-user-dialog" ng-model="true">
 
   <h2>Edit {{ data.username }}'s profile</h2>
 
@@ -80,6 +81,14 @@ if (this.form.invalid) return;
         role: this.form.value.role ?? '',
         credits: this.data?.credits ?? 0
     };
+    this.confirmDialog.confirm({
+      title: 'Are you sure?',
+      message: 'Do you want to edit this user?',
+      confirmLabel: 'Edit',
+      cancelLabel: 'Cancel'
+    
+  }, {panelClass: 'confirm-dialog-panel'}).subscribe((confirmed: any) => {
+    if (confirmed) { 
     this.userService.updateProfile(updatedProfile).subscribe(() => {
       console.log('Profile updated successfully');
       if (this.data.user_Id == this.userData?.user_Id)
@@ -88,6 +97,7 @@ if (this.form.invalid) return;
       }
       this.dialogRef.close(true);
     });
+  }});
 }
   form!: FormGroup;
   userdata$!: Observable<UserResponseDto>;
@@ -101,6 +111,7 @@ if (this.form.invalid) return;
     private dialogRef: MatDialogRef<EditUserDialogComponent>,
     private snackbar: MatSnackBar,
     private auth: AuthService,
+    private confirmDialog: ConfirmDialogService,
 
 
     @Inject(MAT_DIALOG_DATA)
