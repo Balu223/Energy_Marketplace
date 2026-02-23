@@ -1,0 +1,35 @@
+<form [formGroup]="form">
+  <div class="buy-credits">
+    <h2>Buy Credits</h2>
+
+    <label>Credits to buy:</label>
+
+    <div class="qty-row">
+      <button mat-icon-button type="button" (click)="decrement()">
+        <mat-icon>remove</mat-icon>
+      </button>
+
+      <mat-form-field class="qty-field">
+        <input
+          matInput
+          class="quantity-input no-spinner no-outline"
+          type="number"
+          formControlName="credits"
+          min="1"
+        />
+      </mat-form-field>
+
+      <button mat-icon-button type="button" (click)="increment()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+    <div #cardElement class="stripe-card-element"></div>
+
+    <button (click)="pay()" [disabled]="isProcessing">
+      {{ isProcessing ? 'Processing...' : 'Pay ' + (form.get('credits')?.value || 0) + ' HUF' }}
+    </button>
+
+    <p *ngIf="message">{{ message }}</p>
+  </div>
+</form>

@@ -12,6 +12,8 @@ import { UserInventoryButtonComponent } from "./Features/Dashboard/Components/Us
 import { UserResponseDto, UserService } from './Core/Services/user.service';
 import { Observable } from 'rxjs';
 import { AdminPanelButtonComponent } from './Features/Dashboard/Components/Admin-panel/admin-panel-button.component';
+import { MatDialog } from '@angular/material/dialog';
+import { BuyCreditsDialogComponent } from './Features/Dashboard/Components/Stripe-payment/buy-credits.component';
 
 @Component({
   selector: 'app-root',
@@ -55,9 +57,12 @@ import { AdminPanelButtonComponent } from './Features/Dashboard/Components/Admin
   </div>
 </header>
       @if ((auth.isAuthenticated$ | async) && !(isAdminPanel())){
-      <div class="credits-card">
-      <span class="credits-label">Credits</span>
-      <span class="credits-value">{{ (userdata$ | async)?.credits }} HUF</span>
+      <div class="credits-card" (click)="onBuyCredits()">
+        <span class="credits-label">Credits</span>
+        <span class="credits-value">
+          {{ (userdata$ | async)?.credits }} HUF
+        </span>
+        <span class="credits-buy-hint">Buy more?</span>
       </div>}
       @if (!(auth.isLoading$ | async) && !(auth.error$ | async)) {
         @if (isSummaryPage()) {
@@ -107,7 +112,7 @@ export class AppComponent {
   protected readonly isInventoryPage = signal(false);
   protected readonly isAdminPanel = signal(false);
   
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private dialog: MatDialog) {
     this.router.events
       .pipe(filter((e: any) => e?.routerEvent?.url || e.url))
       .subscribe(() => {
@@ -120,4 +125,11 @@ export class AppComponent {
         this.userService.getMe().subscribe();
 
   }
+  onBuyCredits() {
+  this.dialog.open(BuyCreditsDialogComponent, {
+    data: { credits: 175 },
+    panelClass: 'buy-credits-dialog',
+    width: '400px'
+  });
+}
 }
