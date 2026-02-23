@@ -482,9 +482,20 @@ canvas {
   overflow: hidden;
 
   opacity: 0;
-  transform: scale(0.96);
+  transform: translateY(6px) scale(0.98);
   transform-origin: center;
-  animation: dialog-fade-in 100ms ease-out forwards;
+  animation: trade-dialog-soft-in 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes trade-dialog-soft-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* 2) BELSŐ GOMBOS DIV – NEM overlay, csak content */
@@ -497,10 +508,21 @@ canvas {
 /* Gombok maradhatnak így */
 .trade-select-button {
   width: 100%;
-  text-transform: none;
+  justify-content: center;
+  border-radius: 999px;
   font-size: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  font-weight: 500;
+  text-transform: none;
+  padding: 10px 0;
+  border: 1px solid #30363d;
+  background: #0d1117;
+  color: #c9d1d9;
+  box-shadow: none;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    box-shadow 140ms ease,
+    color 120ms ease;
 }
 .trade-select-panel .mat-mdc-dialog-surface {
   background-color: #161b22 !important;
@@ -516,6 +538,7 @@ canvas {
   background-color: #f15a29 !important;
   opacity: 0.18 !important;
 }
+
 
 .trade-row {
   display: flex;
@@ -541,8 +564,9 @@ canvas {
   width: 100%;
   margin-top: 2px;
 }
-.cdk-overlay-backdrop{
-  background-color: rgba(0, 0, 0, 0.5) !important;
+.cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(1px);
 }
 
 
@@ -1087,4 +1111,171 @@ canvas {
 .users-table tr.user-inactive .btn-delete:not(.btn-activate),
 .users-table tr.user-inactive .btn-edit {
   opacity: 0.5;
+}
+.stripe-card-element {
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 12px 0;
+  background: #161b22;
+}
+.credits-card {
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.credits-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.credits-buy-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #58a6ff;
+}
+.buy-credits-dialog .mat-mdc-dialog-container{
+  background-color: #171717;
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+
+  opacity: 0;
+  transform: scale(0.96);
+  transform-origin: center;
+  animation: dialog-fade-in 100ms ease-out forwards;
+}
+.buy-credits {
+display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 24px 24px;
+  border-radius: 16px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  min-width: 300px;
+  max-width: 500px;
+  box-sizing: border-box;
+  color: #c9d1d9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.col-price {
+  min-width: 180px;  /* vagy 200px, amennyi kell */
+}
+
+.buy-credits {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.qty-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-field {
+  flex: 1 1 auto;
+}
+
+.quantity-input {
+  text-align: center;
+}
+body {
+  animation: app-fade-in 300ms ease-out;
+}
+
+@keyframes app-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.main-header {
+  animation: header-drop 260ms ease-out;
+}
+
+.page-content .main-card-wrapper {
+  animation: card-pop 260ms ease-out;
+  animation-delay: 80ms;
+  animation-fill-mode: both;
+}
+
+@keyframes header-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes card-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.page-content {
+  margin-top: 16px;
+  animation: page-slide-in 220ms ease-out;
+}
+
+@keyframes page-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-right > * {
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+.header-right > *:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+.credits-card {
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  animation: credits-pulse 3s ease-in-out infinite;
+}
+
+@keyframes credits-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(63, 185, 80, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(63, 185, 80, 0.25);
+  }
+}
+.price-item {
+  /* meglévő stílusok mellé: */
+  opacity: 0;
+  transform: translateY(4px);
+  animation: list-item-in 200ms ease-out forwards;
+}
+
+@keyframes list-item-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
