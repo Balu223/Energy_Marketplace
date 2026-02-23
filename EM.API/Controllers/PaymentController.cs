@@ -5,55 +5,29 @@ using Stripe;
 using EM.API.Models;
 using EM.API.Models.Enums;
 using EM.API.Repositories.Interfaces;
+using Stripe.V2.Core;
+using Microsoft.AspNetCore.Authorization;
 
-public class AdminUserController : ControllerBase
+[ApiController]
+[Route("api/[controller]")]
+[Authorize(Roles = "User,Broker,Admin")]
+public class PaymentsController : ControllerBase
+{
+    private readonly IPaymentService _paymentService;
+
+    public PaymentsController(IPaymentService paymentService)
     {
-        private readonly IUserService _userService;
-        private readonly IPaymentRepository _paymentRepository;
+        _paymentService = paymentService;
+    }
 
-        public AdminUserController(IUserService userService, IPaymentRepository paymentRepository)
-        {
-            _userService = userService;
-            _paymentRepository = paymentRepository;
-        }
-        [HttpPost("payments/create-intent")]
-    public async Task<IActionResult> CreatePaymentIntent([FromBody] CreateCreditPaymentDto dto)
+    [HttpPost("create-payment-intent")]
+    public async Task<ActionResult<BuyCreditsResponse>> CreatePaymentIntent(
+        [FromBody] BuyCreditsRequest request)
     {
-    var amountPerCredit = 1;
-    var amount = dto.Amount * amountPerCredit;
+        var userId = int.Parse(User.FindFirst("sub")?.Value ?? "0");
+        // vagy ahogy nálad jön a userId a tokenből
 
-    var user = _userService.GetCurrentProfileAsync();
-
-    var options = new PaymentIntentCreateOptions
-    {
-        Amount = amount,
-        Currency = "huf",
-        AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
-        {
-            Enabled = true,
-        },
-        Metadata = new Dictionary<string, string>
-        {
-            { "user_id", user.Id.ToString() },
-            { "credits", dto.Amount.ToString() }
-        }
-    };
-
-    var service = new PaymentIntentService();
-    var intent = await service.CreateAsync(options);
-
-    // Mentés DB-be
-    var payment = new StripePayment
-    {
-        User_Id = user.Id,
-        StripePaymentIntentId = intent.Id,
-        Amount = amount,
-        Currency = "huf",
-        PaymentStatus = Enum.Parse<PaymentStatus>(intent.Status, ignoreCase: true),
-        CreatedAt = DateTime.UtcNow
-    };
-    await _paymentRepository.AddAsync(payment);
-
-    return Ok(new { clientSecret = intent.ClientSecret });
+        var result = await _paymentService.CreatePaymentIntentAsync(userId, request.Credits);
+        return Ok(result);
     }
 }
