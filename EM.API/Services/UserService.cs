@@ -20,10 +20,8 @@ public class UserService : IUserService
     }
 public async Task<CreateUserDto> CreateUserAsync(CreateUserDto userDto)
 {
-    // 1) Auth0 user létrehozása
     var auth0UserId = await _auth0Service.CreateAuth0UserAsync(userDto);
 
-    // 2) Local user entitás
     var user = new User
     {
         Username = userDto.Username,
@@ -33,9 +31,8 @@ public async Task<CreateUserDto> CreateUserAsync(CreateUserDto userDto)
         Auth0_Id = auth0UserId
     };
 
-    await _userRepository.AddAsync(user);   // ebben legyen SaveChangesAsync
+    await _userRepository.AddAsync(user);
 
-    // 3) Visszatérő DTO (ha kell)
     return new CreateUserDto
     {
         Username = user.Username,
@@ -120,12 +117,6 @@ public async Task<CreateUserDto> CreateUserAsync(CreateUserDto userDto)
     {
         throw new NotImplementedException();
     }
-
-   /* public async Task<UserResponseDto?> GetUserByIdAsync(int userId)
-    {
-        throw new NotImplementedException();
-    }
-*/
     public async Task<UserResponseDto?> LoginUserAsync(LoginRequestDto loginRequest)
     {
         throw new NotImplementedException();
@@ -192,5 +183,4 @@ public async Task<UserResponseDto?> UpdateUserAsync(int userId, UpdateProfileDto
         Credits = user.Credits
     };
 }
-
 }

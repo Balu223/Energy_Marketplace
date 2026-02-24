@@ -19,33 +19,7 @@ namespace EM.API.Controllers
             _userService = userService;
             _currentUserService = currentUserService;
         }
-
-
-       /* [HttpGet("{userId}")]
-       public async Task<ActionResult<UserResponseDto>> GetUserById(int userId)
-        {
-            var result = await _userService.GetUserByIdAsync(userId);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
-        }
         
-        [HttpPost]
-        public async Task<ActionResult<UserResponseDto>> CreateUser([FromBody] CreateUserDto userDto)
-        {
-            var result = await _userService.CreateUserAsync(userDto);
-            if (result == null)
-            {
-                return BadRequest("User could not be created.");
-            }
-            return CreatedAtAction(nameof(GetUserById), new { userId = result.User_Id }, result);
-        }
-*/
-        
-        
-       
         [HttpPatch("deactivate")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeactivateUser(int userId)
@@ -57,21 +31,23 @@ namespace EM.API.Controllers
             }
             return NoContent();
         }
+
         [HttpGet("me")]
         [Authorize(Roles = "User,Broker,Admin")]
         public async Task<IActionResult> Me()
         {
             var user = await _currentUserService.GetCurrentUserAsync();
             if (user is null || !user.IsActive)
-            return Forbid();
-            var dto = new UserResponseDto{
+                return Forbid();
+            var dto = new UserResponseDto
+            {
                 User_Id = user.User_Id,
                 Username = user.Username,
                 Email = user.Email,
                 Address = user.Address,
                 Role = user.Role,
                 Credits = user.Credits
-                
+
             };
             return Ok(dto);
         }

@@ -7,9 +7,7 @@ namespace EM.API.Services
 {
     public class TradingService : ITradingService
     {
-
         private readonly MarketplaceDbContext _context;
-
         public TradingService(MarketplaceDbContext context)
         {
             _context = context;
@@ -31,7 +29,7 @@ namespace EM.API.Services
                         ?? throw new InvalidOperationException($"Market item for product ID {productId} not found.");
                 if ((marketItem.Quantity / 4) < quantity)
                     throw new InvalidOperationException("You can only buy up to a quarter of the available quantity in the market.");
-var inventoryItem = await _context.InventoryItems
+                var inventoryItem = await _context.InventoryItems
                     .SingleOrDefaultAsync(i => i.User_Id == userId && i.Product_Id == productId);
 
                 if (inventoryItem == null)
@@ -66,7 +64,6 @@ var inventoryItem = await _context.InventoryItems
                 };
                 await _context.Transactions.AddAsync(transaction);
                 await _context.SaveChangesAsync();
-
         }
 
         public async Task SellToMarketAsync(TradeRequestDto request)

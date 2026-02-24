@@ -13,10 +13,7 @@ namespace EM.API.Models
     public class Transaction
     {
 
-        public Transaction()
-        {
-           // Products = new HashSet<Product>();
-        }
+        public Transaction() {}
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -32,7 +29,5 @@ namespace EM.API.Models
         public int Product_Id { get; set; }
         [ForeignKey(nameof(Product_Id))]
         public Product Product { get; set; } = null!;
-
-        // public virtual ICollection<Product> Products { get; set;  }
     }
 }

@@ -35,10 +35,9 @@ export class UserInventoryComponent implements OnInit {
   hoverBackgroundColor: '#ca566f',
   indexAxis: 'y',
   animation: {
-    duration: 500,          // hosszabb, simább animáció
-    easing: 'easeOutQuart', // kellemes görbe
+    duration: 500,
+    easing: 'easeOutQuart',
   },
-  // Ha szeretnél külön update animációt:
   transitions: {
     active: {
       animation: {
@@ -50,7 +49,6 @@ export class UserInventoryComponent implements OnInit {
   scales: {
     x: {
       min: 0,
-      // max‑ot futás közben állítod, ahogy most
     }
   }
 };
@@ -76,8 +74,6 @@ export class UserInventoryComponent implements OnInit {
 
         const labels = sorted.map(x => `${x.product_Name} (${x.unit.toString()})`);
         const quantities = sorted.map(x => x.quantity);
-
-        // 1) labels + data frissítése, ugyanazzal az objektummal
         this.barChartData.labels = labels;
 
         if (this.barChartData.datasets[0]) {
@@ -102,13 +98,11 @@ opts.scales = opts.scales || {};
 opts.scales['x'] = opts.scales['x'] || {};
 const xScale = opts.scales['x']!;
 
-// csak felfelé engedjük menni
 const targetMax = Math.max(minMax, maxQuantity + 5);
 this.currentXMax = Math.max(this.currentXMax, targetMax);
 (xScale as any).suggestedMin = 0;
 (xScale as any).suggestedMax = targetMax;
 
-        // 3) smooth update – NEM új chart, csak redraw az előző állapotról
         this.chart?.update();
 
         this.loading = false;
@@ -163,6 +157,4 @@ openTrade(event: any) {
       }
     });
   }
-
-
 }

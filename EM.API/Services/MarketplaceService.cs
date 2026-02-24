@@ -54,8 +54,6 @@ public class MarketplaceService : IMarketplaceService
             Purchase_Price_Per_Unit = item.Product.Purchase_Price_Per_Unit,
             Sale_Price_Per_Unit = item.Product.Sale_Price_Per_Unit
         };
-
     }
-
 }
 }

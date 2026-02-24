@@ -47,7 +47,6 @@ public async Task UpdateAuth0UserAsync(string auth0UserId, string? email, string
     var request = new
     {
         username = username,
-        // szerepkör menjen app_metadata-ba (vagy user_metadata-ba)
         app_metadata = new
         {
             role = role
@@ -161,5 +160,4 @@ public async Task UpdateAuth0UserAsync(string auth0UserId, string? email, string
 
         }
     }
-
 }

@@ -28,8 +28,6 @@ export class MarketplaceChartComponent implements OnInit {
       { data: [1, 2, 3], label: 'Marketplace quantity' }
   ]
 };
-
-
   barChartOptions: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
     hoverBackgroundColor: '#ca566f',
@@ -55,16 +53,13 @@ loadData(): void {
         const labels = sorted.map(x => `${x.product_Name} (${x.unit.toString()})`);
         const quantities = sorted.map(x => x.quantity);
 
-        // labels frissítés
         this.barChartData.labels = labels;
 
-        // ha van már dataset, csak frissítjük
         if (this.barChartData.datasets[0]) {
           this.barChartData.datasets[0].data = quantities;
           this.barChartData.datasets[0].label = 'Marketplace quantity';
           this.barChartData.datasets[0].backgroundColor = ['#45a5f5', '#66BB6A', '#FFA726'];
         } else {
-          // fallback, ha valamiért üres lenne
           this.barChartData.datasets = [
             {
               data: quantities,
@@ -126,6 +121,4 @@ openTrade(event: any) {
       }
     });
   }
-
-
 }

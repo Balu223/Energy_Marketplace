@@ -36,9 +36,6 @@ builder.Services
         };
     });
 builder.Services.AddAuthorization();
-
-
-
 builder.Services.AddDbContext<MarketplaceDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -70,10 +67,8 @@ app.UseRouting();
 app.UseCors("Dev");
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 app.Run();
-
 
 public class RolesClaimsTransformation : IClaimsTransformation
 {
@@ -89,7 +84,6 @@ public class RolesClaimsTransformation : IClaimsTransformation
                 identity.AddClaim(new Claim(ClaimTypes.Role, role));
             }
         }
-
         return Task.FromResult(principal);
     }
 }

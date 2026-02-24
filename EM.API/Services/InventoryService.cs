@@ -36,7 +36,7 @@ public class InventoryService : IInventoryService
             });
         }
 
-        public async Task<IEnumerable<InventorySummaryDto>> GetInventoryAsync()
+    public async Task<IEnumerable<InventorySummaryDto>> GetInventoryAsync()
     {
         var user = await _currentUserService.GetCurrentUserAsync();
         var items = await _inventoryRepository.GetInventoryAsync(user.User_Id);
