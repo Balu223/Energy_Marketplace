@@ -1,77 +1,79 @@
 <form [formGroup]="form" class="admin-panel-form">
   <div class="admin-panel">
     <h1>Admin Panel</h1>
-
-    <!-- Users -->
     <section class="users-section">
-  <div class="users-header" (click)="toggleUsers()">
-    <h2>Users Management</h2>
-    <span class="users-toggle-icon">
-      {{ isUsersOpen ? '▲' : '▼' }}
-    </span>
-  </div>
-<div class="users-wrapper" [class.users-wrapper-open]="isUsersOpen && !isUsersClosing" [class.users-wrapper-closing]="isUsersClosing" *ngIf="isUsersOpen || isUsersClosing">
-  @if (isUsersOpen || isUsersClosing) {
-    <div *ngIf="currentUser$ | async as me">
-    <table class="users-table">
-      <thead>
-        <tr>
-          <th *ngIf="me.role === 'Admin'">ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th *ngIf="me.role === 'Admin'">Address</th>
-          <th *ngIf="me.role === 'Admin'">Role</th>
-          <th>Credits</th>
-          <th *ngIf="me.role === 'Admin'">Actions</th>
-        </tr>
-      </thead>
-
-      @if (users$ | async; as users;) {
-        <tbody>
-          @for (user of users; let i = $index; track user.user_Id) {
-            <tr [style.--delay-ms.ms]="(i+1) * 40" [class.user-inactive]="!user.isActive">
-              <td *ngIf="me.role === 'Admin'">{{ user.user_Id }}</td>
-              <td>{{ user.username }}</td>
-              <td>{{ user.email }}</td>
-              <td *ngIf="me.role === 'Admin'">{{ user.address }}</td>
-              <td *ngIf="me.role === 'Admin'">{{ user.role }}</td>
-              <td>{{ user.credits }}</td>
-
-              <td *ngIf="me.role === 'Admin'">
-                
-                <button   (click)="openUserEdit(user)" class="btn-edit">Edit</button>
-                <button (click)="deleteUser(user.user_Id)" class="btn-delete">
-                  Delete
-                </button>
-                <button (click)="user.isActive ? deactivateUser(user.user_Id) : activateUser(user.user_Id)" class="btn-delete" [class.btn-activate]="!user.isActive">
-                  {{ user.isActive ? 'Deactivate' : 'Activate' }}
-                </button>
-
-              </td>
-
-            </tr>
-          }
-        </tbody>
-      } @else {
-        <tbody>
-          <tr>
-            <td colspan="7">Loading users...</td>
-          </tr>
-        </tbody>
-      }
-
-    </table>
-    </div>
-
-
-    <button type="button" (click)="openUserCreate()" class="btn-primary">
-      Add User
-    </button>
-  }
+      <div class="users-header" (click)="toggleUsers()">
+        <h2>Users Management</h2>
+        <span class="users-toggle-icon">
+          {{ isUsersOpen ? '▲' : '▼' }}
+        </span>
       </div>
-</section>
+      <div
+        class="users-wrapper"
+        [class.users-wrapper-open]="isUsersOpen && !isUsersClosing"
+        [class.users-wrapper-closing]="isUsersClosing"
+        *ngIf="isUsersOpen || isUsersClosing"
+      >
+        @if (isUsersOpen || isUsersClosing) {
+          <div *ngIf="currentUser$ | async as me">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th *ngIf="me.role === 'Admin'">ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th *ngIf="me.role === 'Admin'">Address</th>
+                  <th *ngIf="me.role === 'Admin'">Role</th>
+                  <th>Credits</th>
+                  <th *ngIf="me.role === 'Admin'">Actions</th>
+                </tr>
+              </thead>
 
-    <!-- Marketplace -->
+              @if (users$ | async; as users) {
+                <tbody>
+                  @for (user of users; let i = $index; track user.user_Id) {
+                    <tr [style.--delay-ms.ms]="(i + 1) * 40" [class.user-inactive]="!user.isActive">
+                      <td *ngIf="me.role === 'Admin'">{{ user.user_Id }}</td>
+                      <td>{{ user.username }}</td>
+                      <td>{{ user.email }}</td>
+                      <td *ngIf="me.role === 'Admin'">{{ user.address }}</td>
+                      <td *ngIf="me.role === 'Admin'">{{ user.role }}</td>
+                      <td>{{ user.credits }}</td>
+
+                      <td *ngIf="me.role === 'Admin'">
+                        <button (click)="openUserEdit(user)" class="btn-edit">Edit</button>
+                        <button (click)="deleteUser(user.user_Id)" class="btn-delete">
+                          Delete
+                        </button>
+                        <button
+                          (click)="
+                            user.isActive
+                              ? deactivateUser(user.user_Id)
+                              : activateUser(user.user_Id)
+                          "
+                          class="btn-delete"
+                          [class.btn-activate]="!user.isActive"
+                        >
+                          {{ user.isActive ? 'Deactivate' : 'Activate' }}
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              } @else {
+                <tbody>
+                  <tr>
+                    <td colspan="7">Loading users...</td>
+                  </tr>
+                </tbody>
+              }
+            </table>
+          </div>
+
+          <button type="button" (click)="openUserCreate()" class="btn-primary">Add User</button>
+        }
+      </div>
+    </section>
     <section class="marketplace-section">
       <h2>Marketplace Items - Price Management</h2>
 
@@ -95,15 +97,10 @@
                 <td>{{ item.product_Id }}</td>
                 <td>{{ item.product_Name }}</td>
 
-                <td class="price-cell price-purchase">
-                  {{ item.purchase_Price_Per_Unit }} HUF
-                </td>
+                <td class="price-cell price-purchase">{{ item.purchase_Price_Per_Unit }} HUF</td>
 
-                <td class="price-cell price-sale">
-                  {{ item.sale_Price_Per_Unit }} HUF
-                </td>
+                <td class="price-cell price-sale">{{ item.sale_Price_Per_Unit }} HUF</td>
 
-                <!-- New purchase price -->
                 <td class="price-cell" formArrayName="newPurchase">
                   <button mat-icon-button type="button" (click)="decrement(i)">
                     <mat-icon>remove</mat-icon>
@@ -120,14 +117,8 @@
                     <mat-icon>add</mat-icon>
                   </button>
                 </td>
-
-                <!-- New sale price -->
                 <td class="price-cell" formArrayName="newSale">
-                  <button
-                    mat-icon-button
-                    type="button"
-                    (click)="decrementSale(i)"
-                  >
+                  <button mat-icon-button type="button" (click)="decrementSale(i)">
                     <mat-icon>remove</mat-icon>
                   </button>
 
@@ -138,21 +129,13 @@
                     [formControlName]="i"
                   />
 
-                  <button
-                    mat-icon-button
-                    type="button"
-                    (click)="incrementSale(i)"
-                  >
+                  <button mat-icon-button type="button" (click)="incrementSale(i)">
                     <mat-icon>add</mat-icon>
                   </button>
                 </td>
 
                 <td>
-                  <button
-                    type="button"
-                    (click)="updatePrice(item, i)"
-                    class="btn-update"
-                  >
+                  <button type="button" (click)="updatePrice(item, i)" class="btn-update">
                     Update
                   </button>
                 </td>

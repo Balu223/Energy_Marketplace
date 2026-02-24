@@ -9,10 +9,8 @@ namespace EM.API.Models
 {
     public class Product
     {
-        public Product()
-        {
-        }
-        
+        public Product() {}
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Product_Id { get; set; }
@@ -28,6 +26,5 @@ namespace EM.API.Models
         public decimal Purchase_Price_Per_Unit { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-     
     }
 }

@@ -6,7 +6,6 @@ namespace EM.API.Models
 {
     public class MarketplaceItem
     {
-
         public MarketplaceItem()
         {        }
         [Key]

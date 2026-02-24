@@ -4,11 +4,11 @@ using Stripe;
 
 public class PaymentService : IPaymentService
 {
-    private const int CreditPriceInHuf = 100; // 1 kredit = 100 HUF (te döntöd el)
+    private const int CreditPriceInHuf = 1;
 
     public async Task<BuyCreditsResponse> CreatePaymentIntentAsync(int userId, int credits)
     {
-        var amount = credits * CreditPriceInHuf; // Stripe HUF-nál egész számot vár
+        var amount = credits * CreditPriceInHuf;
 
         var options = new PaymentIntentCreateOptions
         {

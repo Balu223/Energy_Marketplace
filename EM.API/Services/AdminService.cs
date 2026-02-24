@@ -16,7 +16,6 @@ public class AdminService : IAdminService
     {
         _userRepository = userRepository;
     }
-
         public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllAsync();

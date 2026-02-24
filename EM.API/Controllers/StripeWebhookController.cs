@@ -44,19 +44,17 @@ public class StripeWebhookController : ControllerBase
             var userId = int.Parse(paymentIntent.Metadata["user_id"]);
             var credits = int.Parse(paymentIntent.Metadata["credits"]);
 
-            // 1) Stripe_payments táblába mentés
             var payment = new StripePayment
             {
                 User_Id = userId,
                 StripePaymentIntentId = paymentIntent.Id,
                 Amount = (int)paymentIntent.Amount,
                 Currency = paymentIntent.Currency,
-                PaymentStatus = Enum.Parse<PaymentStatus>(paymentIntent.Status), // "succeeded"
+                PaymentStatus = Enum.Parse<PaymentStatus>(paymentIntent.Status),
                 CreatedAt = DateTime.UtcNow
             };
             await _paymentRepo.AddAsync(payment);
 
-            // 2) User kreditjeinek növelése
             var user = await _userRepo.GetByIdAsync(userId);
             if (user != null)
             {
@@ -64,7 +62,6 @@ public class StripeWebhookController : ControllerBase
                 await _userRepo.UpdateAsync(user);
             }
         }
-
         return Ok();
     }
 }

@@ -39,7 +39,6 @@ public class InventoryRepository : Repository<InventoryItem>, IInventoryReposito
                 result.Add(newItem);
             }
         }
-
         return result;
     }
 }

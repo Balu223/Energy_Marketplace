@@ -12,7 +12,6 @@ namespace EM.API.Repositories
      {
          return await _context.Set<User>().FirstOrDefaultAsync(x => x.Auth0_Id == auth0Id);
      }
- 
     public async Task<bool> DeactivateAsync(int userId)
      {
          var user = _context.Set<User>().FirstOrDefault(x => x.User_Id == userId);

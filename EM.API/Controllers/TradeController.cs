@@ -32,7 +32,6 @@ namespace EM.API.Controllers
             {
                 return Unauthorized();
             }
-
             try
             {
                 var updatedRequest = new TradeRequestDto
@@ -46,7 +45,6 @@ namespace EM.API.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception (not implemented here)
                 return BadRequest(new { Message = ex.Message });
             }
         }
@@ -58,7 +56,6 @@ namespace EM.API.Controllers
             {
                 return Unauthorized();
             }
-
             try
             {
                 var updatedRequest = new TradeRequestDto
@@ -72,11 +69,8 @@ namespace EM.API.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception (not implemented here)
                 return BadRequest(new { Message = ex.Message });
             }
         }
-
-        
     }
 }

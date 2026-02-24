@@ -8,7 +8,6 @@ namespace EM.API.Repositories
         public MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options) : base(options)
         {
         }
-
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<StripePayment> StripePayments { get; set; }
@@ -101,13 +100,13 @@ namespace EM.API.Repositories
         new MarketplaceItem
         {
             MarketplaceItem_Id = 2,
-            Product_Id = 2,                // Natural Gas
+            Product_Id = 2,                // Gas
             Quantity = 5000.0000m
         },
         new MarketplaceItem
         {
             MarketplaceItem_Id = 3,
-            Product_Id = 3,                // Crude Oil
+            Product_Id = 3,                // Oil
             Quantity = 1000.0000m
         }
         );

@@ -6,10 +6,7 @@ namespace EM.API.Repositories
 {
     public class TransactionRepository : Repository<Transaction>, IRepository<Transaction>
     {
-
         public TransactionRepository(MarketplaceDbContext context) : base(context) { }
-        
-
         public async Task<IReadOnlyList<Transaction>> GetByUserAsync(int userId)
         {
         return (IReadOnlyList<Transaction>)await _context.Transactions

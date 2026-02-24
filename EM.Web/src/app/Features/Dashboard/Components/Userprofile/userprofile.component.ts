@@ -43,7 +43,7 @@ export class UserProfileComponent implements OnInit {
       this.user = user
       this.form.patchValue({
         username: user.username ?? '',
-        email: user.email ?? '',
+        email: user.email,
         address : user.address,
         role : user.role
       });
@@ -75,6 +75,5 @@ export class UserProfileComponent implements OnInit {
       
     });
   });
-
   }
-  }
+}
