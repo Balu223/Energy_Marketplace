@@ -90,7 +90,7 @@ export class UserInventoryComponent implements OnInit {
           ];
         }
 
-        const maxQuantity = quantities.length ? Math.max(...quantities) : 0;
+const maxQuantity = quantities.length ? Math.max(...quantities) : 0;
 const minMax = 10;
 
 const opts = this.barChartOptions!;
@@ -99,11 +99,21 @@ opts.scales['x'] = opts.scales['x'] || {};
 const xScale = opts.scales['x']!;
 
 const targetMax = Math.max(minMax, maxQuantity + 5);
-this.currentXMax = Math.max(this.currentXMax, targetMax);
+
+const prevSuggestedMax = (xScale as any).suggestedMax ?? this.currentXMax;
+const scaleChanged = prevSuggestedMax !== targetMax;
+
+this.currentXMax = targetMax;
+
 (xScale as any).suggestedMin = 0;
 (xScale as any).suggestedMax = targetMax;
 
-        this.chart?.update();
+
+if (scaleChanged) {
+  this.chart?.update('none'); 
+} else {
+  this.chart?.update();
+}
 
         this.loading = false;
         this.error = null;

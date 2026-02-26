@@ -4,7 +4,7 @@ using Stripe;
 
 public class PaymentService : IPaymentService
 {
-    private const int CreditPriceInHuf = 1;
+    private const int CreditPriceInHuf = 100;
 
     public async Task<BuyCreditsResponse> CreatePaymentIntentAsync(int userId, int credits)
     {
