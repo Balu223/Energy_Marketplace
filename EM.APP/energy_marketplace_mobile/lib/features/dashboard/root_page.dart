@@ -1,6 +1,8 @@
 import 'package:energy_marketplace_mobile/core/services/api_client.dart';
+import 'package:energy_marketplace_mobile/core/services/inventory_api.dart';
 import 'package:energy_marketplace_mobile/core/services/marketplace_api.dart';
-import 'package:energy_marketplace_mobile/features/marketplace/marketplace_chart_widget.dart';
+import 'package:energy_marketplace_mobile/features/inventory/inventory_page.dart';
+import 'package:energy_marketplace_mobile/features/marketplace/marketplace_page.dart';
 import 'package:flutter/material.dart';
 import '../../core/services/auth_service.dart';
 import '../../core/models/marketplace_item.dart';
@@ -15,9 +17,11 @@ class RootPage extends StatefulWidget {
 class _RootScreenState extends State<RootPage> {
   late AuthService _auth;
   List<MarketplaceItem>? _items;
+  List<MarketplaceItem>? _inventoryItems;
   // ignore: unused_field
   String? _error;
   bool _loading = false;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -44,13 +48,17 @@ Future<void> _loginAndLoad() async {
     print('Dio headers: ${dio.options.headers}');
 
     final client = ApiClient.fromDio(dio);
-    final api = MarketplaceApi(client: client);
+    final marketplaceApi = MarketplaceApi(client: client);
+    final inventoryApi = InventoryApi(client: client);
 
-    final items = await api.getSummary();
+    final items = await marketplaceApi.getSummary();
     print('Loaded ${items.length} items from API');
+
+    final inventoryItems = await inventoryApi.getInventory();
 
     setState(() {
       _items = items;
+      _inventoryItems = inventoryItems;
     });
   } catch (e, st) {
     print('Error in _loginAndLoad: $e');
@@ -65,83 +73,84 @@ Future<void> _loginAndLoad() async {
   }
 }
 
-  @override
-  Widget build(BuildContext context) {
+ void _onTabTap(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Widget _buildBody() {
+    // loading / login state
     if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_items == null) {
-  return Scaffold(
-    appBar: AppBar(title: const Text('Login')),
-    body: Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_error != null) ...[
-            Text(
-              _error!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.red),
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (_error != null) ...[
+              Text(
+                _error!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.red),
+              ),
+              const SizedBox(height: 12),
+            ],
+            ElevatedButton(
+              onPressed: _loginAndLoad,
+              child: const Text('Login with Auth0'),
             ),
-            const SizedBox(height: 12),
           ],
-          ElevatedButton(
-            onPressed: _loginAndLoad,
-            child: const Text('Login with Auth0'),
+        ),
+      );
+    }
+
+    // ha már van adat, itt váltunk tab szerint
+    switch (_selectedIndex) {
+      case 0:
+        return MarketplacePage(items: _items!);
+      case 1:
+        return  InventoryPage(inventoryItems: _inventoryItems!);
+      case 2:
+        return  MarketplacePage(items: _items!);
+      default:
+        return  MarketplacePage(items: _items!);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _selectedIndex == 0
+              ? 'Dashboard'
+              : _selectedIndex == 1
+                  ? 'Inventory'
+                  : 'Profile',
+        ),
+      ),
+      body: _buildBody(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onTabTap,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt),
+            label: 'Inventory',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),
-    ),
-  );
-}
-
-   return Scaffold(
-  appBar: AppBar(title: const Text('Marketplace')),
-  body: SingleChildScrollView(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // 1) CHART FENT
-        MarketplaceBarChart(items: _items!),
-        const SizedBox(height: 24),
-
-        // 2) LISTA ALATTA
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _items!.length,
-          itemBuilder: (context, index) {
-            final item = _items![index];
-            return Card(
-              color: const Color(0xFF161B22),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListTile(
-                title: Text(
-                  item.productName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                subtitle: Text(
-                  'Buy: ${item.purchasePricePerUnit} HUF, '
-                  'Sell: ${item.salePricePerUnit} HUF\n'
-                  'Qty: ${item.quantity} ${item.unit ?? ''}',
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    ),
-  ),
-);
+    );
   }
 }

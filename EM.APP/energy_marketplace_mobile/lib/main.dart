@@ -17,7 +17,7 @@ class EnergyMarketplaceApp extends StatelessWidget {
         brightness: Brightness.dark,
         colorScheme: const ColorScheme.dark(
           primary: Color(0xFFF15A29),
-          secondary: Color(0xFF3FB950),
+          secondary: Color(0xFFF15A29),
         ),
         scaffoldBackgroundColor: const Color(0xFF0E1117),
         appBarTheme: const AppBarTheme(
