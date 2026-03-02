@@ -2,6 +2,7 @@ using System.Security.Claims;
 using EM.API.Models;
 using EM.API.Models.Enums;
 using EM.API.Repositories.Interfaces;
+using EM.API.Services.DTOs;
 using EM.API.Services.Interfaces;
 
 public class CurrentUserService : ICurrentUserService
@@ -29,12 +30,28 @@ public class CurrentUserService : ICurrentUserService
 
         var user = await _userRepository.GetUserByAuth0IdAsync(sub);
 
-        if (user is not null)
-            return user;
-
-        var email = principal.FindFirst(ClaimTypes.Email)?.Value
+        if (user is not null && user.Email == "")
+        {
+            var userToUpdate = await _userRepository.GetByIdAsync(user.User_Id);
+            var userEmail = principal.FindFirst("http://localhost:4200/email")?.Value
                     ?? principal.FindFirst("email")?.Value
-                    ?? principal.FindFirst("http://localhost:4200/email")?.Value;
+                    ?? principal.FindFirst(ClaimTypes.Email)?.Value;
+            var resp = new User
+            {
+                Username = userToUpdate!.Username,
+                Email = userEmail!,
+                Role = userToUpdate.Role
+
+            };
+            await _userRepository.UpdateAsync(resp);
+        }
+
+        else if (user is not null) {
+            return user;
+        }
+        var email = principal.FindFirst("http://localhost:4200/email")?.Value
+                    ?? principal.FindFirst("email")?.Value
+                    ?? principal.FindFirst(ClaimTypes.Email)?.Value;
 
         var username =
             principal.FindFirst("http://localhost:4200/username")?.Value
