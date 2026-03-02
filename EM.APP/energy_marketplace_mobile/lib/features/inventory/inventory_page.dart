@@ -1,15 +1,17 @@
+import 'package:energy_marketplace_mobile/core/models/user_response.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../core/models/marketplace_item.dart';
 
 class InventoryPage extends StatelessWidget {
   final List<MarketplaceItem> inventoryItems;
+  
+  final dynamic client;
+  final UserResponse currentUser;
 
-  const InventoryPage({super.key, required this.inventoryItems});
+  const InventoryPage({super.key, required this.inventoryItems, required this.client, required this.currentUser});
 double _totalInventoryValue() {
-    return inventoryItems.fold<double>(
-      0,
-      (sum, item) => sum + item.quantity * item.salePricePerUnit,
+    return inventoryItems.fold<double>(0, (sum, item) => sum + item.quantity * item.salePricePerUnit,
     );
   }
 
@@ -196,7 +198,6 @@ double _totalInventoryValue() {
             ),
             const SizedBox(height: 16),
       
-            // 3) PRODUCTONKÉNTI TOTAL VALUE LISTA
             Card(
               color: const Color(0xFF161B22),
               shape: RoundedRectangleBorder(

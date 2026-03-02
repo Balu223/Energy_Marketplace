@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:energy_marketplace_mobile/core/models/marketplace_item.dart';
+import 'package:energy_marketplace_mobile/core/models/trade_request.dart';
 import 'package:energy_marketplace_mobile/core/services/api_client.dart';
 
 class MarketplaceApi {
@@ -23,5 +24,10 @@ class MarketplaceApi {
     return data
         .map((e) => MarketplaceItem.fromJson(e as Map<String, dynamic>))
         .toList();
+  }
+
+  Future<void> executeTrade(String mode, TradeRequest request) async {
+    await client.dio.post('/trade/$mode', data: request.toJson());
+
   }
 }
